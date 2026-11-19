@@ -46,7 +46,7 @@ async function analyse(h: HouseholdCtx, user: AuthUser, input: CsvImportRequest)
   const account = await getVisibleAccount(db(), h.id, user.id, input.accountId);
   if (account.visibility === 'private' && account.ownerUserId !== user.id) throw badRequest('Unknown account');
   if (account.archivedAt) throw badRequest('That account is archived');
-  const parsed = Papa.parse<Record<string, string>>(input.csv.replace(/^﻿/, ''), { header: true, skipEmptyLines: 'greedy', transformHeader: (x) => x.trim() });
+  const parsed = Papa.parse<Record<string, string>>((input.csv.charCodeAt(0) === 0xfeff ? input.csv.slice(1) : input.csv), { header: true, skipEmptyLines: 'greedy', transformHeader: (x) => x.trim() });
   const fields = parsed.meta.fields ?? [];
   for (const col of Object.values(input.mapping).filter(Boolean) as string[]) {
     if (!fields.includes(col)) throw badRequest(`Column “${col}” was not found in the file. Columns found: ${fields.slice(0, 12).join(', ')}`);

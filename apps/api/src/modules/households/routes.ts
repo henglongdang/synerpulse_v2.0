@@ -17,7 +17,7 @@ import { accounts, householdMembers, households, invitations, users } from '../.
 import { db, deps } from '../../lib/deps';
 import { hashToken, newId, newToken } from '../../lib/crypto';
 import { AppError, badRequest, conflict, forbidden, notFound, parse } from '../../lib/errors';
-import { currentHousehold, currentUser, idParam, loadHousehold, requireAuth, requireCap } from '../../lib/http';
+import { currentHousehold, currentUser, idParam, requireAuth, requireCap } from '../../lib/http';
 import { logActivity } from '../../lib/activity';
 import { createHousehold, getMemberRole, listMembers, setCategoryScope } from './service';
 import { notify } from '../notifications/service';

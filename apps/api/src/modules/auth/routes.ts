@@ -71,21 +71,30 @@ authRouter.post('/logout', async (req, res) => {
   res.status(204).end();
 });
 
-authRouter.get('/me', requireAuth, async (req, res) => {
-  const user = currentUser(req);
-  const [row] = await db().select().from(users).where(eq(users.id, user.id));
-  if (!row) throw unauthorized();
+async function buildMe(userId: string): Promise<MeDTO | null> {
+  const [row] = await db().select().from(users).where(eq(users.id, userId));
+  if (!row) return null;
   const [{ count }] = await db()
     .select({ count: sql<number>`count(*)::int` })
     .from(notifications)
-    .where(and(eq(notifications.userId, user.id), isNull(notifications.readAt)));
-  const body: MeDTO = {
+    .where(and(eq(notifications.userId, userId), isNull(notifications.readAt)));
+  return {
     user: { id: row.id, name: row.name, email: row.email, createdAt: row.createdAt.toISOString() },
-    households: await listHouseholdsForUser(user.id, row.lastHouseholdId),
+    households: await listHouseholdsForUser(userId, row.lastHouseholdId),
     notificationPrefs: prefsFor(row.notificationPrefs),
     unreadNotifications: count,
   };
-  res.json(body);
+}
+
+authRouter.get('/me', requireAuth, async (req, res) => {
+  const me = await buildMe(currentUser(req).id);
+  if (!me) throw unauthorized();
+  res.json(me);
+});
+
+/** Session probe for the web app: 200 with `me: null` when signed out (no noisy 401 on first load). */
+authRouter.get('/session', async (req, res) => {
+  res.json({ me: req.user ? await buildMe(req.user.id) : null });
 });
 
 authRouter.patch('/me', requireAuth, async (req, res) => {

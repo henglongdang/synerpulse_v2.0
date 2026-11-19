@@ -2,6 +2,7 @@
   "name": "familypulse",
   "version": "2.0.0",
   "private": true,
+  "type": "module",
   "description": "FamilyPulse — collaborative, anticipatory household finance platform (from 'Revolutionizing Household Finance', HCII 2025).",
   "workspaces": [
     "packages/shared",

@@ -2,31 +2,29 @@ import type { RequestHandler } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { deps } from './deps';
 
-const passthrough: RequestHandler = (_req, _res, next) => next();
-
+/**
+ * Limiters are created once at module load (express-rate-limit requires this) and consult the
+ * runtime configuration on every request via `skip`, so tests can disable them.
+ */
 function limiter(windowMs: number, limit: number, message: string, keyByEmail = false): RequestHandler {
-  let instance: RequestHandler | null = null;
-  return (req, res, next) => {
-    if (!deps().config.rateLimitEnabled) return passthrough(req, res, next);
-    instance ??= rateLimit({
-      windowMs,
-      limit,
-      standardHeaders: 'draft-8',
-      legacyHeaders: false,
-      // Key on IP, plus the target email for credential endpoints, so one attacker cannot lock
-      // out every user and one user cannot be brute-forced from many requests.
-      keyGenerator: (r) => {
-        const ip = r.ip ?? 'unknown';
-        const email = keyByEmail && typeof r.body?.email === 'string' ? r.body.email.toLowerCase().slice(0, 254) : '';
-        return `${ip}|${email}`;
-      },
-      validate: { keyGeneratorIpFallback: false },
-      handler: (_r, response) => {
-        response.status(429).json({ error: { code: 'rate_limited', message } });
-      },
-    });
-    return instance(req, res, next);
-  };
+  return rateLimit({
+    windowMs,
+    limit,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    skip: () => !deps().config.rateLimitEnabled,
+    // Key on IP, plus the target email for credential endpoints, so one attacker cannot lock
+    // out every user and one account cannot be brute-forced from many requests.
+    keyGenerator: (r) => {
+      const ip = r.ip ?? 'unknown';
+      const email = keyByEmail && typeof r.body?.email === 'string' ? r.body.email.toLowerCase().slice(0, 254) : '';
+      return `${ip}|${email}`;
+    },
+    validate: { keyGeneratorIpFallback: false },
+    handler: (_r, response) => {
+      response.status(429).json({ error: { code: 'rate_limited', message } });
+    },
+  });
 }
 
 export const loginLimiter = limiter(15 * 60_000, 10, 'Too many sign-in attempts. Please wait 15 minutes and try again.', true);

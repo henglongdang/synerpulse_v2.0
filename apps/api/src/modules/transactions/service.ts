@@ -15,12 +15,10 @@ import {
 import type { Executor } from '../../db/client';
 import {
   accounts,
-  attachments,
   categories,
   goalContributions,
   goals,
   rules,
-  transactionComments,
   transactionRevisions,
   transactions,
   transactionTags,

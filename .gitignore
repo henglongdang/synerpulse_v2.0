@@ -31,3 +31,7 @@ Thumbs.db
 
 # Signed publishing agreement (personal information; keep local, do not publish)
 HCII 2025 International Paper/ID_5200_HenglongDang_and_FangDing_License_to_Publish_Form.pdf
+
+# Local scratch scripts
+*-tmp.mjs
+apps/web/dev-dist/
