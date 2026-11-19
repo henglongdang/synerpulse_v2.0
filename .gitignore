@@ -1,0 +1,33 @@
+# Dependencies & builds
+node_modules/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.vite/
+
+# Local data (dev database, uploaded receipts)
+data/
+apps/api/data/
+apps/api/uploads/
+uploads/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Test artifacts
+playwright-report/
+test-results/
+apps/web/e2e/.artifacts/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Signed publishing agreement (personal information; keep local, do not publish)
+HCII 2025 International Paper/ID_5200_HenglongDang_and_FangDing_License_to_Publish_Form.pdf
