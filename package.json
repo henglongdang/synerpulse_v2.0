@@ -1,0 +1,39 @@
+{
+  "name": "familypulse",
+  "version": "2.0.0",
+  "private": true,
+  "description": "FamilyPulse — collaborative, anticipatory household finance platform (from 'Revolutionizing Household Finance', HCII 2025).",
+  "workspaces": [
+    "packages/shared",
+    "apps/api",
+    "apps/web"
+  ],
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c green,blue \"npm:dev -w @familypulse/api\" \"npm:dev -w @familypulse/web\"",
+    "dev:api": "npm run dev -w @familypulse/api",
+    "dev:web": "npm run dev -w @familypulse/web",
+    "db:migrate": "npm run db:migrate -w @familypulse/api",
+    "db:seed": "npm run db:seed -w @familypulse/api",
+    "db:reset": "npm run db:reset -w @familypulse/api",
+    "build": "npm run build -w @familypulse/web && npm run build -w @familypulse/api",
+    "start": "npm run start -w @familypulse/api",
+    "test": "npm run test -w @familypulse/shared && npm run test -w @familypulse/api && npm run test -w @familypulse/web",
+    "test:e2e": "npm run test:e2e -w @familypulse/web",
+    "lint": "eslint .",
+    "typecheck": "npm run typecheck -w @familypulse/shared && npm run typecheck -w @familypulse/api && npm run typecheck -w @familypulse/web"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^26.6.6",
+    "concurrently": "^10.0.7",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^5.1.1"
+  }
+}
