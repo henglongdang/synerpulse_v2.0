@@ -69,9 +69,9 @@ export default function OnboardingPage() {
     }
   }
 
-  async function skip() {
-    await api.post(`${base}/onboarded`).catch(() => undefined);
-    await qc.invalidateQueries({ queryKey: meKey });
+  // "Finish later" keeps setup open: the dashboard shows a banner to continue where you left off.
+  function skip() {
+    invalidate();
     navigate('/');
   }
 

@@ -182,7 +182,7 @@ function EntryForm({ args, onClose }: { args: OpenArgs; onClose: () => void }) {
       footer={
         <div className="form-actions">
           <Button onClick={onClose}>Cancel</Button>
-          <Button variant="primary" loading={saving} onClick={() => submit(false)} type="submit" form="entry-form">
+          <Button variant="primary" loading={saving} disabled={accounts.isLoading} onClick={() => submit(false)} type="submit" form="entry-form">
             {editing ? 'Save changes' : kind === 'transfer' ? 'Record transfer' : 'Save entry'}
           </Button>
         </div>

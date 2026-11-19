@@ -20,8 +20,10 @@ export function WelcomePage({ allowCancel }: { allowCancel?: boolean }) {
     setError(null);
     try {
       await api.post('/households', { name, currency });
+      // Navigate before refreshing the session: once the household exists the router swaps route
+      // tables, and the old URL (e.g. /register) would otherwise redirect to the dashboard first.
+      navigate('/onboarding', { replace: true });
       await qc.invalidateQueries({ queryKey: meKey });
-      navigate('/onboarding');
     } catch (err) {
       setError(err);
     } finally {

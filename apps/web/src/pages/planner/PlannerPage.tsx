@@ -410,7 +410,7 @@ function AdjustmentEditor({ a, onChange, onRemove }: { a: Adjustment; onChange: 
               </option>
             ))}
           </Select>
-          <Slider label="Change" value={a.basisPoints / 100} min={-100} max={50} step={5} format={(v) => `${v > 0 ? '+' : ''}${v}%`} onChange={(v) => onChange({ ...a, basisPoints: v * 100 })} />
+          <Slider label="Change" value={a.basisPoints / 100} min={-100} max={50} step={5} format={signedPct} onChange={(v) => onChange({ ...a, basisPoints: v * 100 })} />
           <Input type="date" aria-label="Starting" value={a.startDate ?? ''} min={today} onChange={(e) => onChange({ ...a, startDate: e.target.value || undefined })} />
           <span className="xs muted">{a.startDate ? `From ${shortDate(a.startDate)}` : 'Starting now'} — leave the date empty to apply immediately.</span>
         </>
@@ -427,7 +427,7 @@ function AdjustmentEditor({ a, onChange, onRemove }: { a: Adjustment; onChange: 
                 </option>
               ))}
           </Select>
-          <Slider label="Change" value={a.basisPoints / 100} min={-50} max={100} step={5} format={(v) => `${v > 0 ? '+' : ''}${v}%`} onChange={(v) => onChange({ ...a, basisPoints: v * 100 })} />
+          <Slider label="Change" value={a.basisPoints / 100} min={-50} max={100} step={5} format={signedPct} onChange={(v) => onChange({ ...a, basisPoints: v * 100 })} />
         </>
       )}
       {a.kind === 'one_time' && (
@@ -476,6 +476,9 @@ function AdjustmentEditor({ a, onChange, onRemove }: { a: Adjustment; onChange: 
     </div>
   );
 }
+
+/** Signed percentage with a true minus sign, matching how money is displayed. */
+const signedPct = (v: number) => (v > 0 ? `+${v}%` : v < 0 ? `−${-v}%` : '0%');
 
 function Slider({ label, value, min, max, step, format, onChange }: { label: string; value: number; min: number; max: number; step: number; format: (v: number) => string; onChange: (v: number) => void }) {
   return (

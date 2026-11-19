@@ -2,6 +2,9 @@
 
 Status key: ✅ done · 🟡 partial · ⏳ planned (future) — see [FEATURE_IMPLEMENTATION.md](FEATURE_IMPLEMENTATION.md) for the per-feature matrix.
 
+## Status at end of session 1 (2026-11-19)
+E1–E12 ✅ done and tested. E13 🟡: README, `.env.example`, PROJECT_UNDERSTANDING, FEATURE_IMPLEMENTATION and DEVELOPMENT_LOG are written. ARCHITECTURE, DATABASE_SCHEMA, API, SECURITY_AND_PRIVACY, USER_GUIDE, DESIGN_SYSTEM, the API `tsup` build and Docker remain. The ordered next steps are in [DEVELOPMENT_LOG.md](DEVELOPMENT_LOG.md#next-session-start-here).
+
 ## Essential (must ship for v2.0)
 
 | # | Milestone | Contents |
