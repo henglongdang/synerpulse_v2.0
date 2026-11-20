@@ -1,6 +1,6 @@
-# FamilyPulse User Guide
+# SynerPulse User Guide
 
-FamilyPulse keeps your household's money in one shared place: the accounts you share, what's been spent, the bills coming up, what you're saving for, and a planner that shows where things are heading. Everyone you invite sees the same numbers, and each person can do as much (or as little) as their role allows.
+SynerPulse keeps your household's money in one shared place: the accounts you share, what's been spent, the bills coming up, what you're saving for, and a planner that shows where things are heading. Everyone you invite sees the same numbers, and each person can do as much (or as little) as their role allows.
 
 ## 1. Getting started
 1. **Create an account** with your name, email and a password of at least 10 characters.
@@ -34,7 +34,7 @@ Joining someone else's household? Open the invitation link they sent you, then c
   - **Comments:** ask questions or add context. Tap a name (for example *@Mary*) to mention someone; they'll get a notification.
   - **History:** every change, who made it, and when. Tap *Restore* to go back to an earlier version.
   - **Receipts:** attach a photo or PDF (up to 5 MB). On a phone this can open the camera.
-- **Edit or delete:** deleted entries can be undone immediately and stay in the history. If someone else changed an entry while you were editing it, FamilyPulse shows both versions and lets you choose.
+- **Edit or delete:** deleted entries can be undone immediately and stay in the history. If someone else changed an entry while you were editing it, SynerPulse shows both versions and lets you choose.
 - **Breakdown:** what was spent in a month, by group (Living, Entertainment, Unexpected) and category. Tap a category to see its entries.
 - **Import a bank statement:** *Import CSV* → choose the account and file → match the columns → *Preview* → *Import*. Entries already in the account are detected and skipped.
 - **Offline?** You can still add entries. They show under *Saved on this device* and are sent automatically when you're back online.
@@ -74,7 +74,7 @@ Joining someone else's household? Open the invitation link they sent you, then c
 
 ## 9. Settings, privacy and your data
 - Change your name or password, see the devices you're signed in on, and sign them out.
-- **Data sources** shows where numbers come from. FamilyPulse never asks for your online-banking password, and automatic bank syncing isn't connected.
+- **Data sources** shows where numbers come from. SynerPulse never asks for your online-banking password, and automatic bank syncing isn't connected.
 - **Download my data** gives you everything you can see, as a file.
 - **Delete account** permanently removes your login and private accounts. If you own a household with other members, transfer ownership first.
 

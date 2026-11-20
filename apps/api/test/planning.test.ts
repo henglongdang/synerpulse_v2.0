@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { addDays, addMonths, monthKey, todayISO } from '@familypulse/shared';
+import { addDays, addMonths, monthKey, todayISO } from '@synerpulse/shared';
 import { addMember, client, createTestEnv, registerUser, setupHousehold, type TestEnv } from './helpers';
 import { seed, SAMPLE_PASSWORD, SAMPLE_USERS } from '../src/db/seed';
 import { sweepHousehold } from '../src/modules/alerts/service';

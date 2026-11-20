@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle2, CircleSlash, Download, Laptop, LogOut, Smartphone } from 'lucide-react';
-import { isDemoEmail, type NotificationPrefs, type SessionDTO } from '@familypulse/shared/client';
+import { isDemoEmail, type NotificationPrefs, type SessionDTO } from '@synerpulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { meKey, signOut, useHousehold } from '../../lib/session';
 import { useToast } from '../../lib/toast';
@@ -248,7 +248,7 @@ function browserName(ua: string | null) {
 function Integrations() {
   const q = useQuery({ queryKey: ['integrations'], queryFn: () => api.get<{ providers: { id: string; name: string; status: string; description: string }[] }>('/integrations').then((r) => r.providers) });
   return (
-    <Section id="integrations" title="Data sources" sub="Where FamilyPulse’s numbers come from.">
+    <Section id="integrations" title="Data sources" sub="Where SynerPulse’s numbers come from.">
       {q.isLoading ? (
         <Skeleton h={60} />
       ) : (

@@ -1,4 +1,4 @@
-import type { ApiErrorBody } from '@familypulse/shared/client';
+import type { ApiErrorBody } from '@synerpulse/shared/client';
 
 /** Error thrown for any non-2xx API response, carrying the server's safe message and field details. */
 export class ApiError extends Error {
@@ -22,7 +22,7 @@ export class ApiError extends Error {
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 async function request<T>(method: Method, path: string, body?: unknown, init: RequestInit = {}): Promise<T> {
-  const headers: Record<string, string> = { Accept: 'application/json', 'X-Requested-With': 'familypulse' };
+  const headers: Record<string, string> = { Accept: 'application/json', 'X-Requested-With': 'synerpulse' };
   let payload: BodyInit | undefined;
   if (body instanceof FormData) payload = body;
   else if (body !== undefined) {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { and, asc, eq } from 'drizzle-orm';
-import { createCategorySchema, updateCategorySchema, type CategoryDTO } from '@familypulse/shared';
+import { createCategorySchema, updateCategorySchema, type CategoryDTO } from '@synerpulse/shared';
 import { categories } from '../../db/schema';
 import { db } from '../../lib/deps';
 import { newId } from '../../lib/crypto';

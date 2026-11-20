@@ -1,4 +1,4 @@
-import { formatCents } from '@familypulse/shared/client';
+import { formatCents } from '@synerpulse/shared/client';
 
 export const money = (cents: number, currency = 'USD', opts?: Parameters<typeof formatCents>[2]) => formatCents(cents, currency, opts);
 

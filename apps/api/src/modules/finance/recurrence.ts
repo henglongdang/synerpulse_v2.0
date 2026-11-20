@@ -1,4 +1,4 @@
-import { addDays, addMonths, daysInMonth, roundHalfAwayFromZero, type Frequency, type ISODate } from '@familypulse/shared';
+import { addDays, addMonths, daysInMonth, roundHalfAwayFromZero, type Frequency, type ISODate } from '@synerpulse/shared';
 
 export interface Schedule {
   frequency: Frequency;

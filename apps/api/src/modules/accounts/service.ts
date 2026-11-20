@@ -1,5 +1,5 @@
 import { and, asc, eq, isNull, or, sql, type SQL } from 'drizzle-orm';
-import type { AccountDTO, AccountType, Scope } from '@familypulse/shared';
+import type { AccountDTO, AccountType, Scope } from '@synerpulse/shared';
 import type { Executor } from '../../db/client';
 import { accounts, transactions, users } from '../../db/schema';
 import { notFound } from '../../lib/errors';

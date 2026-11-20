@@ -19,7 +19,7 @@ import {
   updateRecurringSchema,
   zMonth,
   type ScenarioDTO,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import {
   accounts,
   budgetItems,

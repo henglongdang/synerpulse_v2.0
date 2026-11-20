@@ -35,7 +35,7 @@ function useDocumentTitle() {
       '/onboarding': 'Set up',
     };
     const page = map[pathname];
-    document.title = page ? `${page} · FamilyPulse` : 'FamilyPulse';
+    document.title = page ? `${page} · SynerPulse` : 'SynerPulse';
   }, [pathname]);
 }
 

@@ -24,7 +24,7 @@ afterAll(() => database.close());
 describe('rate limiting', () => {
   it('locks out repeated failed sign-ins for one account with 429', async () => {
     const attempt = () =>
-      request(app).post('/api/auth/login').set('X-Requested-With', 'familypulse').set('Origin', ORIGIN).send({ email: 'victim@example.test', password: 'wrong-password' });
+      request(app).post('/api/auth/login').set('X-Requested-With', 'synerpulse').set('Origin', ORIGIN).send({ email: 'victim@example.test', password: 'wrong-password' });
     const statuses: number[] = [];
     for (let i = 0; i < 11; i++) statuses.push((await attempt()).status);
     expect(statuses.slice(0, 10).every((s) => s === 401)).toBe(true);
@@ -35,7 +35,7 @@ describe('rate limiting', () => {
   });
 
   it('keys credential limits per target email, so other accounts still work', async () => {
-    const res = await request(app).post('/api/auth/login').set('X-Requested-With', 'familypulse').set('Origin', ORIGIN).send({ email: 'someone-else@example.test', password: 'x' });
+    const res = await request(app).post('/api/auth/login').set('X-Requested-With', 'synerpulse').set('Origin', ORIGIN).send({ email: 'someone-else@example.test', password: 'x' });
     expect(res.status).toBe(401);
   });
 });

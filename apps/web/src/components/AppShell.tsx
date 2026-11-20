@@ -17,7 +17,7 @@ import {
   Settings,
   Users,
 } from 'lucide-react';
-import { isDemoEmail, ROLE_LABELS } from '@familypulse/shared/client';
+import { isDemoEmail, ROLE_LABELS } from '@synerpulse/shared/client';
 import { signOut, useHousehold } from '../lib/session';
 import { flushOutbox, useOnline, useOutbox } from '../lib/outbox';
 import { useToast } from '../lib/toast';
@@ -178,7 +178,7 @@ function Shell() {
   const invalidate = useInvalidate();
   const entry = useEntryDialog();
   const unread = me.unreadNotifications;
-  const title = TITLES[location.pathname] ?? 'FamilyPulse';
+  const title = TITLES[location.pathname] ?? 'SynerPulse';
 
   // Replay offline entries when the connection returns (and once on load).
   useEffect(() => {
@@ -200,9 +200,9 @@ function Shell() {
         Skip to content
       </a>
       <aside className="sidebar" aria-label="Main navigation">
-        <Link to="/" className="sidebar-logo" aria-label="FamilyPulse home">
-          <img src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
-          <img className="mark" src="/brand/familypulse-mark.svg" alt="" style={{ display: 'none' }} />
+        <Link to="/" className="sidebar-logo" aria-label="SynerPulse home">
+          <img src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
+          <img className="mark" src="/brand/synerpulse-mark.svg" alt="" style={{ display: 'none' }} />
         </Link>
         <nav className="nav">
           {NAV.map((n) => (
@@ -252,8 +252,8 @@ function Shell() {
           <div className="mobile-only">
             <UserMenu />
           </div>
-          <Link to="/" className="topbar-logo mobile-only" aria-label="FamilyPulse home">
-            <img src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+          <Link to="/" className="topbar-logo mobile-only" aria-label="SynerPulse home">
+            <img src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
           </Link>
           <div className="topbar-context desktop-only">
             <span className="sr-only">{title} · </span>

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { and, desc, eq, isNull, lt, or, sql } from 'drizzle-orm';
 import { z } from 'zod';
-import type { ActivityDTO, NotificationDTO } from '@familypulse/shared';
+import type { ActivityDTO, NotificationDTO } from '@synerpulse/shared';
 import { activityEvents, notifications, users } from '../../db/schema';
 import { db } from '../../lib/deps';
 import { notFound, parse } from '../../lib/errors';

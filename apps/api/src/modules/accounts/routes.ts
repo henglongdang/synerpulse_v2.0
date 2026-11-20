@@ -9,7 +9,7 @@ import {
   SCOPES,
   updateAccountSchema,
   formatCents,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import { accounts, transactions } from '../../db/schema';
 import { db } from '../../lib/deps';
 import { newId } from '../../lib/crypto';

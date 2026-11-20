@@ -21,7 +21,7 @@ import {
   type RecurringDTO,
   type Scope,
   type UpcomingBillDTO,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import type { Executor } from '../../db/client';
 import { accounts, budgetItems, budgetPlans, categories, goals, recurringItems, transactions } from '../../db/schema';
 import { accountVisibility } from '../accounts/service';

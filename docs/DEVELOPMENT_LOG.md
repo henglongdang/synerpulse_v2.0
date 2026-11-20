@@ -11,7 +11,7 @@
 
 What remains, in priority order:
 
-1. **Go live (needs the owner's Render account).** Click the README's *Deploy to Render* button, sign in with GitHub, and apply the blueprint. Afterwards: check the public URL (sign-in page shows the demo card), add SMTP for real emails, and upgrade the free database before its time limit. Pushed: https://github.com/henglongdang/familypulse_v2.0 (public). CI passed its first run, including the Docker build.
+1. **Go live (needs the owner's Render account).** Click the README's *Deploy to Render* button, sign in with GitHub, and apply the blueprint. Afterwards: check the public URL (sign-in page shows the demo card), add SMTP for real emails, and upgrade the free database before its time limit. Pushed: https://github.com/henglongdang/synerpulse_v2.0 (public). CI passed its first run, including the Docker build.
 2. **Product decision: future-dated entries.** Current balances and net worth include entries dated after "today", while the net-worth history up to today does not. Decide whether "current" should exclude them (show them as *scheduled*), then change the balance queries (`accounts/service.ts`, `finance/service.ts`) and the dashboard together.
 3. **Hardening, from SECURITY_AND_PRIVACY.md:** Postgres row-level security as defence in depth, email verification, optional 2FA, and a shared rate-limit store before running several instances.
 4. **Features recorded as future work** (FEATURE_IMPLEMENTATION.md ⏳): edit-approval workflow, email and push delivery, receipt OCR, PDF/Excel export, a bank aggregator behind `FinancialDataProvider`, multi-currency, dark mode.
@@ -24,7 +24,7 @@ Housekeeping the user should know about:
 ---
 
 ## Session 3 — 2026-11-20 (publishing)
-- **GitHub:** public repo `henglongdang/familypulse_v2.0`. Before the first push, history was rewritten to drop the paper PDFs (publisher copyright); the slides and wireframes are kept. **Mistake and fix:** `git filter-branch` also deleted the two PDFs from the working folder. They were restored immediately from the pre-rewrite objects, with identical content hashes, and a full backup bundle was kept. Doc references to old commit hashes were updated; commit `4edd973`'s message still cites the pre-rewrite `17615ac` (now `cdc05d0`).
+- **GitHub:** public repo `henglongdang/synerpulse_v2.0`. Before the first push, history was rewritten to drop the paper PDFs (publisher copyright); the slides and wireframes are kept. **Mistake and fix:** `git filter-branch` also deleted the two PDFs from the working folder. They were restored immediately from the pre-rewrite objects, with identical content hashes, and a full backup bundle was kept. Doc references to old commit hashes were updated; commit `4edd973`'s message still cites the pre-rewrite `17615ac` (now `cdc05d0`).
 - **First CI run: all green**: checks, E2E on 4 devices, and the **Docker image build + smoke test** (the first real verification of the Dockerfile).
 - **Run modes:** `npm run dev` (blank DB) vs `npm run demo` / `demo:reset` (separate DB with the sample household), via `scripts/dev.mjs`.
 - **Public website support:** a `render.yaml` blueprint (web service from the Dockerfile + PostgreSQL) and a README "Deploy to Render" button. `APP_ORIGIN` falls back to `RENDER_EXTERNAL_URL`. `DEMO_MODE` seeds the demo at startup and resets it **by age** (hosts sleep idle services, so a timer alone would not fire). `forbidDemo` locks shared demo accounts against account- and household-level changes. The sign-in page has an "Explore the demo household" button, and the demo banner offers "Create your own account".
@@ -38,11 +38,11 @@ Housekeeping the user should know about:
 | Item | Result |
 |---|---|
 | API production bundle | `tsup.config.ts` with entries `index`, `migrate` and `seed`; `npm start` migrates, then serves. Smoke-tested: the SPA, service worker and manifest are served; JSON 404s; login; security headers. The built app ran in Chromium under the production CSP with **no console errors**, and the service worker registered. |
-| Production-only install | A simulated Docker runtime stage (`npm ci --omit=dev --workspace=@familypulse/api`: 129 packages, 65 MB) booted and handled registration (native Argon2 + DB). |
+| Production-only install | A simulated Docker runtime stage (`npm ci --omit=dev --workspace=@synerpulse/api`: 129 packages, 65 MB) booted and handled registration (native Argon2 + DB). |
 | Docker | Multi-stage `Dockerfile` (non-root user, healthcheck, migrate-then-start), `docker-compose.yml` (app + postgres:17), `.dockerignore`. **Not built here**; the CI `docker` job does it. |
 | Postgres driver verification | `npm run test:pg` runs the whole API suite through **node-postgres over the real wire protocol** (PGlite via `pglite-socket`, pool of 1). 80/80 pass. Raw `min(date)` aggregates were cast to `::text` for driver-independent typing. |
 | Docs | API, ARCHITECTURE, DATABASE_SCHEMA, SECURITY_AND_PRIVACY, DESIGN_SYSTEM, DEPLOYMENT, USER_GUIDE (+ the README update). |
-| Bundle | `@familypulse/shared/client` (no Zod in the browser) plus vendor chunks: app code 96 kB / 31 kB gzip (was one 531 kB chunk). |
+| Bundle | `@synerpulse/shared/client` (no Zod in the browser) plus vendor chunks: app code 96 kB / 31 kB gzip (was one 531 kB chunk). |
 | Polish | On small screens the dashboard shows tips and bills before goals and accounts; seeded activity and comments are back-dated to their entries. |
 | CI | `.github/workflows/ci.yml`: checks, then E2E and Docker. |
 

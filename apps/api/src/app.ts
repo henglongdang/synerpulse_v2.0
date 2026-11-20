@@ -21,7 +21,7 @@ import { activityRouter, notificationsRouter } from './modules/activity/routes';
 import { importsRouter } from './modules/imports/routes';
 import { privacyRouter } from './modules/privacy/routes';
 import { providerStatuses } from './services/providers';
-import { DEMO_EMAIL_DOMAIN, DEMO_PASSWORD } from '@familypulse/shared';
+import { DEMO_EMAIL_DOMAIN, DEMO_PASSWORD } from '@synerpulse/shared';
 
 export function createApp() {
   const { config } = deps();

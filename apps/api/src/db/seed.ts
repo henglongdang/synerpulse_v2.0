@@ -4,7 +4,7 @@
  * All amounts are generated from a seeded PRNG relative to today's date; no real data is used.
  */
 import { and, eq, sql } from 'drizzle-orm';
-import { addDays, addMonths, DEMO_EMAIL_DOMAIN, DEMO_PASSWORD, monthKey, startOfMonth, todayInZone, type ISODate } from '@familypulse/shared';
+import { addDays, addMonths, DEMO_EMAIL_DOMAIN, DEMO_PASSWORD, monthKey, startOfMonth, todayInZone, type ISODate } from '@synerpulse/shared';
 
 /** The sample household lives in the machine's local time zone, so "today" matches the developer's clock. */
 export const SAMPLE_TIMEZONE = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';

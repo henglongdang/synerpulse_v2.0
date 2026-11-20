@@ -13,7 +13,7 @@ import {
   type MeDTO,
   type NotificationPrefs,
   type SessionDTO,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import { db, deps } from '../../lib/deps';
 import { burnPasswordCheck, hashPassword, hashToken, newId, newToken, verifyPassword } from '../../lib/crypto';
 import { AppError, conflict, notFound, parse, unauthorized } from '../../lib/errors';
@@ -156,8 +156,8 @@ authRouter.post('/password/forgot', passwordResetLimiter, async (req, res) => {
     const link = `${deps().config.appOrigin}/reset-password?token=${encodeURIComponent(token)}`;
     await deps().email.send({
       to: user.email,
-      subject: 'Reset your FamilyPulse password',
-      text: `Hi ${user.name},\n\nSomeone (hopefully you) asked to reset your FamilyPulse password.\nThis link works once and expires in 30 minutes:\n\n${link}\n\nIf you did not ask for this, you can ignore this email — your password has not changed.`,
+      subject: 'Reset your SynerPulse password',
+      text: `Hi ${user.name},\n\nSomeone (hopefully you) asked to reset your SynerPulse password.\nThis link works once and expires in 30 minutes:\n\n${link}\n\nIf you did not ask for this, you can ignore this email — your password has not changed.`,
     });
   }
   // Same response either way, so the endpoint cannot be used to discover registered emails.

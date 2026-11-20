@@ -30,7 +30,7 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react';
-import type { AccountType } from '@familypulse/shared/client';
+import type { AccountType } from '@synerpulse/shared/client';
 
 const BY_NAME: Record<string, LucideIcon> = {
   groceries: ShoppingCart,

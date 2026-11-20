@@ -1,5 +1,5 @@
 import { eq, inArray, like } from 'drizzle-orm';
-import { DEMO_EMAIL_DOMAIN } from '@familypulse/shared';
+import { DEMO_EMAIL_DOMAIN } from '@synerpulse/shared';
 import type { DB } from '../../db/client';
 import { accounts, households, users } from '../../db/schema';
 import { seed } from '../../db/seed';

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CheckCircle2, FileUp } from 'lucide-react';
-import type { ImportResultDTO } from '@familypulse/shared/client';
+import type { ImportResultDTO } from '@synerpulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { useAccounts, useInvalidate } from '../../lib/queries';

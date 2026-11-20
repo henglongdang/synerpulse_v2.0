@@ -1,8 +1,8 @@
-# FamilyPulse
+# SynerPulse
 
 A collaborative, forward-looking household finance app: one shared place for accounts, budgets, bills, goals and the conversation around every entry, plus a cash-flow planner for testing a decision before you make it.
 
-FamilyPulse is the software implementation of the paper:
+SynerPulse is the software implementation of the paper:
 
 > Dang, H., Ding, F. *Revolutionizing Household Finance: A User-Centered Platform for Holistic Financial Management.* HCI International 2025, Springer. https://doi.org/10.1007/978-3-032-13164-5_2
 
@@ -12,7 +12,7 @@ The conference slides and the original Figma wireframes are in `HCII 2025 Intern
 
 ## Put it online (public website)
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/henglongdang/familypulse_v2.0)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/henglongdang/synerpulse_v2.0)
 
 The button creates the web app and a PostgreSQL database on [Render](https://render.com) from `render.yaml`. You sign in with GitHub and confirm. The site then offers both:
 - **Create your own account**: a fresh, blank household for real use.
@@ -30,8 +30,8 @@ See `docs/DEPLOYMENT.md` for free-tier limits, email setup and a custom domain.
 Prerequisite: Node.js 20.19 or newer (developed on Node 26).
 
 ```bash
-git clone https://github.com/henglongdang/familypulse_v2.0.git
-cd familypulse_v2.0
+git clone https://github.com/henglongdang/synerpulse_v2.0.git
+cd synerpulse_v2.0
 npm install
 ```
 
@@ -48,10 +48,10 @@ Demo sign-ins (fictional names and figures):
 
 | Role | Email | Password |
 |---|---|---|
-| Owner | mary@sample.familypulse.test | familypulse-demo |
-| Admin | power@sample.familypulse.test | familypulse-demo |
-| Contributor (Groceries & Dining out only) | luna@sample.familypulse.test | familypulse-demo |
-| Viewer | liam@sample.familypulse.test | familypulse-demo |
+| Owner | mary@sample.synerpulse.test | synerpulse-demo |
+| Admin | power@sample.synerpulse.test | synerpulse-demo |
+| Contributor (Groceries & Dining out only) | luna@sample.synerpulse.test | synerpulse-demo |
+| Viewer | liam@sample.synerpulse.test | synerpulse-demo |
 
 In development, password-reset and invitation emails are printed to the API console instead of being sent.
 
@@ -74,7 +74,7 @@ See `.env.example`. With no configuration the API uses the embedded database at 
 A single Node service serves the API and the built web app (`WEB_DIST_DIR`) from one origin, behind TLS, with managed PostgreSQL and SMTP for email. `docker compose up --build` runs the app with PostgreSQL locally. Full guidance and a pre-launch checklist are in `docs/DEPLOYMENT.md`.
 
 ## Known limitations
-- No live bank connections: data comes from manual entry and CSV import, and FamilyPulse never asks for banking passwords.
+- No live bank connections: data comes from manual entry and CSV import, and SynerPulse never asks for banking passwords.
 - Notifications are in-app only (no email or push delivery yet). There is no receipt OCR. Export is CSV and JSON (no PDF or Excel).
 - One currency per household. No edit-approval workflow, 2FA or email verification yet.
 - Smart Tips and forecasts are transparent rules and simulations, not machine learning, and not financial advice.

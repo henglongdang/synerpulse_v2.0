@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AlertOctagon, AtSign, Bell, CalendarClock, CheckCheck, Gauge, MessageSquare, PartyPopper, TrendingDown, Trash2, UserPlus, Users, Zap } from 'lucide-react';
-import type { NotificationDTO, NotificationType } from '@familypulse/shared/client';
+import type { NotificationDTO, NotificationType } from '@synerpulse/shared/client';
 import { api } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { relativeTime } from '../../lib/format';

@@ -18,5 +18,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   splitting: true,
-  noExternal: ['@familypulse/shared'],
+  noExternal: ['@synerpulse/shared'],
 });

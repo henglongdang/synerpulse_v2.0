@@ -71,8 +71,8 @@ test('invite a contributor, edit + comment with @mention, owner sees notificatio
 
 test('viewers can read and comment but cannot add or edit entries', async ({ page }) => {
   await page.goto('/login');
-  await page.getByLabel('Email').fill('liam@sample.familypulse.test');
-  await page.getByLabel('Password').fill('familypulse-demo');
+  await page.getByLabel('Email').fill('liam@sample.synerpulse.test');
+  await page.getByLabel('Password').fill('synerpulse-demo');
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Liam');
   await expect(page.getByRole('button', { name: 'Add entry' })).toHaveCount(0);

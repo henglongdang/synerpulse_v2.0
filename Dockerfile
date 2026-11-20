@@ -1,4 +1,4 @@
-# FamilyPulse — single-origin production image (API + built web app).
+# SynerPulse — single-origin production image (API + built web app).
 # The runtime stage mirrors a layout verified locally (prod-only `npm ci`, bundled API, web dist).
 # NOTE: this Dockerfile has not been built on the development machine (Docker was unavailable);
 #       see docs/DEPLOYMENT.md.
@@ -15,7 +15,7 @@ COPY tsconfig.base.json ./
 COPY packages/shared packages/shared
 COPY apps/api apps/api
 COPY apps/web apps/web
-RUN npm run build -w @familypulse/web && npm run build -w @familypulse/api
+RUN npm run build -w @synerpulse/web && npm run build -w @synerpulse/api
 
 # ---------- runtime ----------
 FROM node:22-bookworm-slim AS runtime
@@ -29,7 +29,7 @@ COPY package.json package-lock.json ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
-RUN npm ci --omit=dev --workspace=@familypulse/api --no-audit --no-fund && npm cache clean --force
+RUN npm ci --omit=dev --workspace=@synerpulse/api --no-audit --no-fund && npm cache clean --force
 COPY --from=build /app/packages/shared/src packages/shared/src
 COPY --from=build /app/apps/api/dist apps/api/dist
 COPY --from=build /app/apps/api/drizzle apps/api/drizzle

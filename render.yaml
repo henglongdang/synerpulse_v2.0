@@ -1,9 +1,9 @@
-# Render Blueprint — one-click deploy of FamilyPulse (web app + API) with PostgreSQL.
+# Render Blueprint — one-click deploy of SynerPulse (web app + API) with PostgreSQL.
 # Use the "Deploy to Render" button in README.md, or Render dashboard → New → Blueprint → this repo.
 # Free plans have limits (idle services sleep; free databases expire) — see docs/DEPLOYMENT.md.
 services:
   - type: web
-    name: familypulse
+    name: synerpulse
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
@@ -12,7 +12,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: familypulse-db
+          name: synerpulse-db
           property: connectionString
       # Render terminates TLS in front of the app; APP_ORIGIN defaults to RENDER_EXTERNAL_URL.
       - key: TRUST_PROXY
@@ -33,7 +33,7 @@ services:
         value: console
 
 databases:
-  - name: familypulse-db
+  - name: synerpulse-db
     plan: free
-    databaseName: familypulse
-    user: familypulse
+    databaseName: synerpulse
+    user: synerpulse

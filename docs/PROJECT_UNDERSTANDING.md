@@ -1,4 +1,4 @@
-# Project Understanding — FamilyPulse v2.0
+# Project Understanding — SynerPulse v2.0
 
 *Written before implementation began (Phase 1 audit). Later changes are recorded in [DEVELOPMENT_LOG.md](DEVELOPMENT_LOG.md).*
 
@@ -89,7 +89,7 @@ Branding is described in §5.
 
 ## 5. Existing design and branding system (extracted)
 
-**Logo.** A geometric, segmented wordmark that reads "PULSE", with an **F** fused to the **P** (FamilyPulse). The letterforms are built from flat colour segments with 45° chamfers. The logo is reused as-is: it is extracted from the highest-resolution source and vectorised by automated tracing, with no redrawing.
+**Logo.** A geometric, segmented wordmark that reads "PULSE", with an **F** fused to the **P** (SynerPulse). The letterforms are built from flat colour segments with 45° chamfers. The logo is reused as-is: it is extracted from the highest-resolution source and vectorised by automated tracing, with no redrawing.
 
 | Token (sampled from artwork) | Hex | Used in prototype for |
 |---|---|---|

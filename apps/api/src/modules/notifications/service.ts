@@ -1,5 +1,5 @@
 import { inArray } from 'drizzle-orm';
-import { DEFAULT_NOTIFICATION_PREFS, type NotificationPrefs, type NotificationType } from '@familypulse/shared';
+import { DEFAULT_NOTIFICATION_PREFS, type NotificationPrefs, type NotificationType } from '@synerpulse/shared';
 import type { Executor } from '../../db/client';
 import { notifications, users } from '../../db/schema';
 import { newId } from '../../lib/crypto';

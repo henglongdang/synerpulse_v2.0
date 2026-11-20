@@ -11,7 +11,7 @@ async function main() {
   const app = createApp();
   const server = app.listen(config.port, () => {
     logger.info(
-      `FamilyPulse API listening on :${config.port} (${config.env}${config.demoMode ? ', public demo on' : ''}) · database: ${database.driver}${database.driver === 'pglite' ? ` (${config.pgliteDir})` : ''} · email: ${deps().email.transport}${config.webDistDir ? ` · serving web app from ${config.webDistDir}` : ''}`,
+      `SynerPulse API listening on :${config.port} (${config.env}${config.demoMode ? ', public demo on' : ''}) · database: ${database.driver}${database.driver === 'pglite' ? ` (${config.pgliteDir})` : ''} · email: ${deps().email.transport}${config.webDistDir ? ` · serving web app from ${config.webDistDir}` : ''}`,
     );
   });
   if (config.isProd && database.driver === 'pglite') {

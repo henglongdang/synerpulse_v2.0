@@ -9,7 +9,7 @@
  *  - goal reached / halfway        (after contributions)
  */
 import { eq } from 'drizzle-orm';
-import { formatCents, monthKey, monthLabel, todayInZone } from '@familypulse/shared';
+import { formatCents, monthKey, monthLabel, todayInZone } from '@synerpulse/shared';
 import { householdMembers, households } from '../../db/schema';
 import { db, deps } from '../../lib/deps';
 import { logger } from '../../lib/logger';

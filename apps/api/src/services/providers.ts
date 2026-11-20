@@ -3,7 +3,7 @@
  *
  * The paper identifies the absence of live bank data as the prototype's main limitation (§4.2).
  * Live aggregation requires a commercial provider (e.g. Plaid, MX, Teller) under contract, with
- * credentials that this repository does not have. Rather than pretending, FamilyPulse ships:
+ * credentials that this repository does not have. Rather than pretending, SynerPulse ships:
  *   - `manual`: ledger entry in the app (always available),
  *   - `csv`:    statement import with duplicate detection (always available),
  *   - `aggregator`: an interface placeholder that reports "not configured".
@@ -45,7 +45,7 @@ export function providerStatuses(env: NodeJS.ProcessEnv = process.env): Provider
       status: aggregatorConfigured ? 'available' : 'not_configured',
       description: aggregatorConfigured
         ? 'A bank-data provider is configured for this deployment.'
-        : 'Not connected in this deployment. Requires a contract with a bank-data provider (e.g. Plaid). FamilyPulse never asks for your online-banking password.',
+        : 'Not connected in this deployment. Requires a contract with a bank-data provider (e.g. Plaid). SynerPulse never asks for your online-banking password.',
     },
   ];
 }

@@ -1,4 +1,4 @@
-import type { CategoryGroup } from '@familypulse/shared';
+import type { CategoryGroup } from '@synerpulse/shared';
 
 /**
  * Starter categories, organised in the prototype's Living / Entertainment / Unexpected groups.

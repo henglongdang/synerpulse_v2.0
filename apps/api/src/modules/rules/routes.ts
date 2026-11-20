@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { and, asc, eq } from 'drizzle-orm';
-import { createRuleSchema, updateRuleSchema, type RuleDTO } from '@familypulse/shared';
+import { createRuleSchema, updateRuleSchema, type RuleDTO } from '@synerpulse/shared';
 import { categories, goals, rules } from '../../db/schema';
 import { db } from '../../lib/deps';
 import { newId } from '../../lib/crypto';

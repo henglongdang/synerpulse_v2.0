@@ -10,7 +10,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="auth">
       <aside className="auth-brand">
-        <img className="logo" src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+        <img className="logo" src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
         <h1>Your household’s money, in one shared place.</h1>
         <div className="auth-points">
           <div className="auth-point">
@@ -42,7 +42,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
         <p className="auth-foot">
-          FamilyPulse builds on the design research in <em>Revolutionizing Household Finance: A User-Centered Platform for Holistic Financial Management</em>{' '}
+          SynerPulse builds on the design research in <em>Revolutionizing Household Finance: A User-Centered Platform for Holistic Financial Management</em>{' '}
           (Dang & Ding, HCI International 2025).
         </p>
       </aside>
@@ -133,7 +133,7 @@ export function LoginPage() {
   return (
     <AuthLayout>
       <form className="auth-form" onSubmit={submit} noValidate>
-        <img className="auth-mobile-logo" src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+        <img className="auth-mobile-logo" src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
         <div>
           <h2>Sign in</h2>
           <p className="muted small" style={{ marginTop: 4 }}>
@@ -154,7 +154,7 @@ export function LoginPage() {
           Sign in
         </Button>
         <p className="small muted" style={{ textAlign: 'center' }}>
-          New to FamilyPulse?{' '}
+          New to SynerPulse?{' '}
           <Link to="/register" state={{ from }}>
             Create an account
           </Link>
@@ -190,7 +190,7 @@ export function RegisterPage() {
   return (
     <AuthLayout>
       <form className="auth-form" onSubmit={submit} noValidate>
-        <img className="auth-mobile-logo" src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+        <img className="auth-mobile-logo" src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
         <div>
           <h2>Create your account</h2>
           <p className="muted small" style={{ marginTop: 4 }}>
@@ -243,7 +243,7 @@ export function ForgotPasswordPage() {
   return (
     <AuthLayout>
       <form className="auth-form" onSubmit={submit} noValidate>
-        <img className="auth-mobile-logo" src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+        <img className="auth-mobile-logo" src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
         <div>
           <h2>Reset your password</h2>
           <p className="muted small" style={{ marginTop: 4 }}>
@@ -298,7 +298,7 @@ export function ResetPasswordPage() {
   return (
     <AuthLayout>
       <form className="auth-form" onSubmit={submit} noValidate>
-        <img className="auth-mobile-logo" src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+        <img className="auth-mobile-logo" src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
         <h2>Choose a new password</h2>
         {done ? (
           <>

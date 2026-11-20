@@ -29,7 +29,7 @@ const envSchema = z.object({
   WEB_DIST_DIR: z.string().optional(),
   EMAIL_TRANSPORT: z.enum(['console', 'smtp', 'disabled']).default('console'),
   SMTP_URL: z.string().optional(),
-  EMAIL_FROM: z.string().default('FamilyPulse <no-reply@familypulse.local>'),
+  EMAIL_FROM: z.string().default('SynerPulse <no-reply@synerpulse.local>'),
   RATE_LIMIT_ENABLED: bool,
   /** Background alert sweep interval (minutes). 0 disables the scheduler. */
   ALERT_SWEEP_MINUTES: z.coerce.number().int().min(0).max(1440).default(60),

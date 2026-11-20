@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ROLE_DESCRIPTIONS, ROLE_LABELS, type Role } from '@familypulse/shared/client';
+import { ROLE_DESCRIPTIONS, ROLE_LABELS, type Role } from '@synerpulse/shared/client';
 import { api } from '../../lib/api';
 import { meKey, useMe } from '../../lib/session';
 import { Button, ErrorState, FormError, PageLoading } from '../../components/ui';
@@ -30,7 +30,7 @@ export function InvitePage() {
       <AuthLayout>
         <div className="auth-form">
           <ErrorState error={inv.error} />
-          <Link to="/">Go to FamilyPulse</Link>
+          <Link to="/">Go to SynerPulse</Link>
         </div>
       </AuthLayout>
     );
@@ -54,7 +54,7 @@ export function InvitePage() {
   return (
     <AuthLayout>
       <div className="auth-form">
-        <img className="auth-mobile-logo" src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+        <img className="auth-mobile-logo" src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
         <div>
           <p className="eyebrow">Household invitation</p>
           <h2 style={{ marginTop: 4 }}>Join {i.householdName}</h2>

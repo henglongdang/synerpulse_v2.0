@@ -21,7 +21,7 @@ import {
   type ForecastSeriesDTO,
   type Frequency,
   type ISODate,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import { occurrences } from '../finance/recurrence';
 
 export interface RecurringInput {

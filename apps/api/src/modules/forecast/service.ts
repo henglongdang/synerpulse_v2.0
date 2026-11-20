@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { DEFAULT_NOTIFICATION_PREFS, type ForecastRequest, type ForecastResultDTO } from '@familypulse/shared';
+import { DEFAULT_NOTIFICATION_PREFS, type ForecastRequest, type ForecastResultDTO } from '@synerpulse/shared';
 import type { Executor } from '../../db/client';
 import { recurringItems, users } from '../../db/schema';
 import { everydayBaseline, listGoals, listRecurring, liquidAccounts } from '../finance/service';

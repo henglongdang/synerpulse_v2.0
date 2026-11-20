@@ -1,4 +1,4 @@
-import { addMonths, ratioToBasisPoints, type ISODate } from '@familypulse/shared';
+import { addMonths, ratioToBasisPoints, type ISODate } from '@synerpulse/shared';
 
 export interface GoalMath {
   progressBp: number;

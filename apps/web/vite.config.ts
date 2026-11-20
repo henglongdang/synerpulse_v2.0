@@ -10,10 +10,10 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
-      includeAssets: ['icons/favicon-32.png', 'icons/apple-touch-icon.png', 'brand/familypulse-logo.svg', 'brand/familypulse-mark.svg'],
+      includeAssets: ['icons/favicon-32.png', 'icons/apple-touch-icon.png', 'brand/synerpulse-logo.svg', 'brand/synerpulse-mark.svg'],
       manifest: {
-        name: 'FamilyPulse',
-        short_name: 'FamilyPulse',
+        name: 'SynerPulse',
+        short_name: 'SynerPulse',
         description: 'Shared household budgets, a collaborative ledger and cash-flow forecasts in one place.',
         start_url: '/',
         scope: '/',

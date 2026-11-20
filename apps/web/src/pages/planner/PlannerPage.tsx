@@ -6,7 +6,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AlertOctagon, CalendarClock, CheckCircle2, Info, Plus, Save, Trash2, TrendingDown, Wallet, X } from 'lucide-react';
-import { addDays, addMonths, FREQUENCIES, FREQUENCY_LABELS, type Adjustment, type ForecastResultDTO, type ScenarioDTO } from '@familypulse/shared/client';
+import { addDays, addMonths, FREQUENCIES, FREQUENCY_LABELS, type Adjustment, type ForecastResultDTO, type ScenarioDTO } from '@synerpulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { useCategories, useInvalidate, useRecurring } from '../../lib/queries';

@@ -15,12 +15,12 @@ Start with **one instance**. Sessions live in the database, so more instances wo
 ## Render (one-click, recommended)
 1. Open the **Deploy to Render** button in the README, or go to Render dashboard → **New → Blueprint** and pick this repository.
 2. Render reads `render.yaml` and creates:
-   - **`familypulse`**, a web service built from the `Dockerfile`, with health check `/api/health` and auto-deploy on every push to `main`;
-   - **`familypulse-db`**, a PostgreSQL database wired in through `DATABASE_URL`.
-3. When the deploy finishes, the site is at `https://familypulse-XXXX.onrender.com` (shown in the dashboard). `APP_ORIGIN` comes from Render's `RENDER_EXTERNAL_URL` automatically.
+   - **`synerpulse`**, a web service built from the `Dockerfile`, with health check `/api/health` and auto-deploy on every push to `main`;
+   - **`synerpulse-db`**, a PostgreSQL database wired in through `DATABASE_URL`.
+3. When the deploy finishes, the site is at `https://synerpulse-XXXX.onrender.com` (shown in the dashboard). `APP_ORIGIN` comes from Render's `RENDER_EXTERNAL_URL` automatically.
 
 Preconfigured settings:
-- `DEMO_MODE=true`: on first start the API loads the fictional sample household and offers "Explore the demo household" on the sign-in page. Demo accounts (`*@sample.familypulse.test`) are locked against password, profile, session, account, household, membership and invitation changes. The demo is reset whenever it is older than `DEMO_RESET_HOURS` (24), checked at startup and hourly, so it stays correct even when the service sleeps.
+- `DEMO_MODE=true`: on first start the API loads the fictional sample household and offers "Explore the demo household" on the sign-in page. Demo accounts (`*@sample.synerpulse.test`) are locked against password, profile, session, account, household, membership and invitation changes. The demo is reset whenever it is older than `DEMO_RESET_HOURS` (24), checked at startup and hourly, so it stays correct even when the service sleeps.
 - `TRUST_PROXY=true`, so client IPs are correct for rate limiting behind Render's proxy.
 - `EMAIL_TRANSPORT=console`: until you add SMTP (`EMAIL_TRANSPORT=smtp`, `SMTP_URL`), password-reset and invitation emails appear in the service log, not in inboxes. Invitations still work, because the inviter copies the link from the app.
 
@@ -48,7 +48,7 @@ npm start                           # = node dist/migrate.js && node dist/index.
 - The production bundle served the SPA, service worker and manifest.
 - The app ran under the production CSP with no console errors.
 - Login worked.
-- A **production-only** install (`npm ci --omit=dev --workspace=@familypulse/api`, 129 packages) booted and handled registration (native Argon2 + database).
+- A **production-only** install (`npm ci --omit=dev --workspace=@synerpulse/api`, 129 packages) booted and handled registration (native Argon2 + database).
 
 ## Docker
 
@@ -63,7 +63,7 @@ docker compose run --rm app node dist/seed.js --allow-production   # optional fi
 
 ## Database
 - Migrations are applied automatically at start (`dist/migrate.js`) and are safe to re-run.
-- Schema changes: edit `src/db/schema.ts`, run `npm run db:generate -w @familypulse/api`, commit the new SQL in `apps/api/drizzle/`.
+- Schema changes: edit `src/db/schema.ts`, run `npm run db:generate -w @synerpulse/api`, commit the new SQL in `apps/api/drizzle/`.
 - Back up before deploying migrations. There are no destructive migrations yet.
 
 ## Environment

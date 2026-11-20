@@ -12,7 +12,7 @@ import {
   type AttachmentDTO,
   type CommentDTO,
   type RevisionDTO,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import {
   attachments,
   commentMentions,
@@ -71,7 +71,7 @@ transactionsRouter.get('/export.csv', async (req, res) => {
     if (page * 100 >= result.total) break;
   }
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-  res.setHeader('Content-Disposition', `attachment; filename="familypulse-ledger-${new Date().toISOString().slice(0, 10)}.csv"`);
+  res.setHeader('Content-Disposition', `attachment; filename="synerpulse-ledger-${new Date().toISOString().slice(0, 10)}.csv"`);
   res.send(rows.join('\r\n'));
 });
 

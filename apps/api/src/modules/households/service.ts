@@ -1,5 +1,5 @@
 import { and, asc, eq, inArray, sql } from 'drizzle-orm';
-import type { HouseholdSummaryDTO, MemberDTO, Role } from '@familypulse/shared';
+import type { HouseholdSummaryDTO, MemberDTO, Role } from '@synerpulse/shared';
 import type { Executor } from '../../db/client';
 import { categories, householdMembers, households, memberCategoryScopes, users } from '../../db/schema';
 import { db } from '../../lib/deps';

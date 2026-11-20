@@ -71,13 +71,13 @@ describe('CSRF protection', () => {
   it('rejects requests from a foreign Origin', async () => {
     const res = await request(env.app)
       .post('/api/auth/login')
-      .set('X-Requested-With', 'familypulse')
+      .set('X-Requested-With', 'synerpulse')
       .set('Origin', 'https://evil.example')
       .send({ email: 'a@b.test', password: 'x' });
     expect(res.status).toBe(403);
   });
   it('accepts same-origin requests', async () => {
-    const res = await request(env.app).post('/api/auth/login').set('X-Requested-With', 'familypulse').set('Origin', ORIGIN).send({ email: 'a@b.test', password: 'xxxxxxxxxxxx' });
+    const res = await request(env.app).post('/api/auth/login').set('X-Requested-With', 'synerpulse').set('Origin', ORIGIN).send({ email: 'a@b.test', password: 'xxxxxxxxxxxx' });
     expect(res.status).toBe(401);
   });
 });
@@ -128,11 +128,11 @@ describe('hardening', () => {
     expect(res.headers['x-powered-by']).toBeUndefined();
   });
   it('rejects malformed and oversized JSON bodies cleanly', async () => {
-    const bad = await request(env.app).post('/api/auth/login').set('X-Requested-With', 'familypulse').set('Content-Type', 'application/json').send('{"email":');
+    const bad = await request(env.app).post('/api/auth/login').set('X-Requested-With', 'synerpulse').set('Content-Type', 'application/json').send('{"email":');
     expect(bad.status).toBe(400);
     const big = await request(env.app)
       .post('/api/auth/login')
-      .set('X-Requested-With', 'familypulse')
+      .set('X-Requested-With', 'synerpulse')
       .send({ email: 'a@b.test', password: 'x'.repeat(2_000_000) });
     expect(big.status).toBe(413);
   });

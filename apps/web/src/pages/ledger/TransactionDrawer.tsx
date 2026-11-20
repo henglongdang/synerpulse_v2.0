@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { FileText, History, Lock, MessageSquare, Paperclip, Pencil, RotateCcw, Trash2, Upload } from 'lucide-react';
-import type { AttachmentDTO, CommentDTO, RevisionDTO, TransactionDTO } from '@familypulse/shared/client';
+import type { AttachmentDTO, CommentDTO, RevisionDTO, TransactionDTO } from '@synerpulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { useInvalidate, useMembers } from '../../lib/queries';

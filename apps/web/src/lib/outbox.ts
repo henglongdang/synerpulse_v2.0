@@ -24,7 +24,7 @@ export interface PendingEntry {
 }
 
 let store: ReturnType<typeof createStore> | null = null;
-const getStore = () => (store ??= createStore('familypulse', 'outbox'));
+const getStore = () => (store ??= createStore('synerpulse', 'outbox'));
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
 

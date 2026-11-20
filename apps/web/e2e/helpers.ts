@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-export const SAMPLE = { email: 'mary@sample.familypulse.test', password: 'familypulse-demo' };
+export const SAMPLE = { email: 'mary@sample.synerpulse.test', password: 'synerpulse-demo' };
 export const uniqueEmail = (tag: string) => `${tag}-${Date.now()}-${Math.floor(Math.random() * 1e6)}@e2e.test`;
 
 export async function register(page: Page, name: string, email: string, password = 'correct horse battery') {

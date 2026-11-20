@@ -53,10 +53,10 @@ jobs:
     needs: checks
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t familypulse:ci .
+      - run: docker build -t synerpulse:ci .
       - name: Smoke test (embedded database, health + SPA)
         run: |
-          docker run -d --name fp -p 4000:4000 -e APP_ORIGIN=http://localhost:4000 -e COOKIE_SECURE=false familypulse:ci
+          docker run -d --name fp -p 4000:4000 -e APP_ORIGIN=http://localhost:4000 -e COOKIE_SECURE=false synerpulse:ci
           for i in $(seq 1 40); do curl -sf http://localhost:4000/api/health && break; sleep 2; done
           curl -sf http://localhost:4000/api/health
           curl -sf http://localhost:4000/ | grep -q '<div id="root">'

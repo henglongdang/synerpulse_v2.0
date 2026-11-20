@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Check, PartyPopper, Plus } from 'lucide-react';
-import { CATEGORY_GROUP_LABELS, EXPENSE_GROUPS, FREQUENCY_LABELS, monthKey, type CategoryGroup } from '@familypulse/shared/client';
+import { CATEGORY_GROUP_LABELS, EXPENSE_GROUPS, FREQUENCY_LABELS, monthKey, type CategoryGroup } from '@synerpulse/shared/client';
 import { api } from '../../lib/api';
 import { meKey, useHousehold } from '../../lib/session';
 import { useAccounts, useCategories, useGoals, useInvalidate, useRecurring } from '../../lib/queries';
@@ -77,7 +77,7 @@ export default function OnboardingPage() {
 
   const header = (
     <header className="onboard-head">
-      <img src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+      <img src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
       <Button variant="ghost" size="sm" onClick={skip}>
         Finish later
       </Button>
@@ -260,7 +260,7 @@ export default function OnboardingPage() {
             <div>
               <h1>What are you saving for?</h1>
               <p className="muted" style={{ marginTop: 4 }}>
-                Goals keep everyone pointed the same way. FamilyPulse works out the monthly amount needed to hit each date.
+                Goals keep everyone pointed the same way. SynerPulse works out the monthly amount needed to hit each date.
               </p>
             </div>
             <div className="card">

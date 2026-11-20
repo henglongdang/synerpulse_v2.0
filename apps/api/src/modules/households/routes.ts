@@ -11,7 +11,7 @@ import {
   updateMemberSchema,
   type InviteDTO,
   type Role,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import { z } from 'zod';
 import { accounts, householdMembers, households, invitations, users } from '../../db/schema';
 import { db, deps } from '../../lib/deps';
@@ -364,8 +364,8 @@ householdRouter.post('/invitations', forbidDemo, requireCap('members.manage'), a
   if (input.email) {
     await deps().email.send({
       to: input.email,
-      subject: `${actor.name} invited you to ${h.name} on FamilyPulse`,
-      text: `${actor.name} invited you to join the household “${h.name}” on FamilyPulse as ${ROLE_LABELS[input.role]}.\n\nAccept the invitation (valid for 7 days):\n${url}\n`,
+      subject: `${actor.name} invited you to ${h.name} on SynerPulse`,
+      text: `${actor.name} invited you to join the household “${h.name}” on SynerPulse as ${ROLE_LABELS[input.role]}.\n\nAccept the invitation (valid for 7 days):\n${url}\n`,
     });
   }
   await logActivity(db(), {

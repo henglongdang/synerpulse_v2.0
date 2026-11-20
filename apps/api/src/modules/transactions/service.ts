@@ -11,7 +11,7 @@ import {
   type TransactionDTO,
   type TransactionSource,
   type TransactionType,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import type { Executor } from '../../db/client';
 import {
   accounts,

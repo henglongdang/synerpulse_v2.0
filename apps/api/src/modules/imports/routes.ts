@@ -7,7 +7,7 @@ import { Router } from 'express';
 import Papa from 'papaparse';
 import { createHash } from 'node:crypto';
 import { and, eq, isNull, sql } from 'drizzle-orm';
-import { csvImportSchema, isValidISODate, parseMoneyToCents, type CsvImportRequest, type ImportPreviewRowDTO, type ImportResultDTO } from '@familypulse/shared';
+import { csvImportSchema, isValidISODate, parseMoneyToCents, type CsvImportRequest, type ImportPreviewRowDTO, type ImportResultDTO } from '@synerpulse/shared';
 import { accounts, categories, transactions } from '../../db/schema';
 import { db } from '../../lib/deps';
 import { badRequest, parse } from '../../lib/errors';

@@ -1,6 +1,6 @@
 /** Accounts in this (reserved, non-routable `.test`) domain belong to the shared, fictional demo household. */
-export const DEMO_EMAIL_DOMAIN = 'sample.familypulse.test';
-export const DEMO_PASSWORD = 'familypulse-demo';
+export const DEMO_EMAIL_DOMAIN = 'sample.synerpulse.test';
+export const DEMO_PASSWORD = 'synerpulse-demo';
 export function isDemoEmail(email: string | null | undefined): boolean {
   return typeof email === 'string' && email.toLowerCase().endsWith(`@${DEMO_EMAIL_DOMAIN}`);
 }

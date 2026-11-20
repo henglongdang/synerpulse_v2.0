@@ -1,6 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { and, eq } from 'drizzle-orm';
-import { can, isDemoEmail, todayInZone, type Capability, type Role } from '@familypulse/shared';
+import { can, isDemoEmail, todayInZone, type Capability, type Role } from '@synerpulse/shared';
 import { db, deps } from './deps';
 import { AppError, forbidden, notFound, unauthorized } from './errors';
 import { householdMembers, households, memberCategoryScopes } from '../db/schema';
@@ -121,7 +121,7 @@ export function assertCap(h: HouseholdCtx, capability: Capability): void {
  */
 export const csrfGuard: RequestHandler = (req, _res, next) => {
   if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
-  if (req.get('x-requested-with') !== 'familypulse') {
+  if (req.get('x-requested-with') !== 'synerpulse') {
     return next(new AppError(403, 'csrf', 'Missing request header'));
   }
   const origin = req.get('origin');

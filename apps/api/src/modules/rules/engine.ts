@@ -1,4 +1,4 @@
-import { applyBasisPoints } from '@familypulse/shared';
+import { applyBasisPoints } from '@synerpulse/shared';
 
 /**
  * Rule-based automation (paper §2.5: "customizable tagging and rule-based automation …

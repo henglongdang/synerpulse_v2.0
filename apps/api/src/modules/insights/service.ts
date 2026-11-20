@@ -16,7 +16,7 @@ import {
   type RecurringDTO,
   type Scope,
   type SmartTipDTO,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import type { Executor } from '../../db/client';
 import { accounts, categories, transactions } from '../../db/schema';
 import { accountVisibility } from '../accounts/service';

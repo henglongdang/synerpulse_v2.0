@@ -1,6 +1,6 @@
 # Design System
 
-FamilyPulse's visual language carries over the HCII prototype: mint paper, forest-green ink, the multicolour segmented **F·PULSE** wordmark, and thick coloured section rules. It refines them for density, accessibility and data clarity. Tokens are in `apps/web/src/styles/tokens.css`; components are in `components.css`, `layout.css` and `pages.css`, and the React components in `src/components/ui.tsx`. **Reuse these; don't create one-off variants.**
+SynerPulse's visual language carries over the HCII prototype: mint paper, forest-green ink, the multicolour segmented **F·PULSE** wordmark, and thick coloured section rules. It refines them for density, accessibility and data clarity. Tokens are in `apps/web/src/styles/tokens.css`; components are in `components.css`, `layout.css` and `pages.css`, and the React components in `src/components/ui.tsx`. **Reuse these; don't create one-off variants.**
 
 ## Principles
 1. **The data is the loudest thing.** Borders and whitespace do the separating; shadows are reserved for floating layers.

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
-import { SUPPORTED_CURRENCIES } from '@familypulse/shared/client';
+import { SUPPORTED_CURRENCIES } from '@synerpulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { meKey, signOut } from '../../lib/session';
 import { browserTimeZone } from '../../lib/format';
@@ -35,7 +35,7 @@ export function WelcomePage({ allowCancel }: { allowCancel?: boolean }) {
   return (
     <AuthLayout>
       <form className="auth-form" onSubmit={submit} noValidate>
-        <img className="auth-mobile-logo" src="/brand/familypulse-logo.svg" alt="FamilyPulse" />
+        <img className="auth-mobile-logo" src="/brand/synerpulse-logo.svg" alt="SynerPulse" />
         <div>
           <p className="eyebrow">Step 1 of 6</p>
           <h2 style={{ marginTop: 4 }}>Name your household</h2>

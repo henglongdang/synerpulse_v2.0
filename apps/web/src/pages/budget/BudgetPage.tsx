@@ -11,7 +11,7 @@ import {
   type BudgetMonthDTO,
   type GoalDTO,
   type RecurringDTO,
-} from '@familypulse/shared/client';
+} from '@synerpulse/shared/client';
 import { api } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { useCategories, useGoals, useInvalidate, useRecurring } from '../../lib/queries';
@@ -262,7 +262,7 @@ function Goals() {
         </div>
       ) : (goals.data ?? []).length === 0 ? (
         <EmptyState icon={<Target size={22} />} title="No goals yet">
-          A down payment, a college fund, an emergency cushion — FamilyPulse shows the monthly amount needed to get there.
+          A down payment, a college fund, an emergency cushion — SynerPulse shows the monthly amount needed to get there.
         </EmptyState>
       ) : (
         <ul className="list" style={{ marginTop: 6 }}>

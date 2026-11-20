@@ -8,7 +8,7 @@ import {
   type AccountType,
   type GoalDTO,
   type RecurringDTO,
-} from '@familypulse/shared/client';
+} from '@synerpulse/shared/client';
 import { api, ApiError } from '../lib/api';
 import { useHousehold } from '../lib/session';
 import { useAccounts, useCategories, useInvalidate } from '../lib/queries';
@@ -111,7 +111,7 @@ export function AccountForm({ onDone, compact }: { onDone: () => void; compact?:
           </span>
         </label>
       </fieldset>
-      <div className="form-banner info small">FamilyPulse never asks for your online-banking password. Balances come from what you enter or import.</div>
+      <div className="form-banner info small">SynerPulse never asks for your online-banking password. Balances come from what you enter or import.</div>
       <div className="form-actions">
         <Button onClick={onDone}>Cancel</Button>
         <Button type="submit" variant="primary" loading={saving}>

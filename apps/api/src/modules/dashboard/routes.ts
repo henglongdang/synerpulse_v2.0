@@ -12,7 +12,7 @@ import {
   type ActivityDTO,
   type DashboardDTO,
   type SmartTipDTO,
-} from '@familypulse/shared';
+} from '@synerpulse/shared';
 import { accounts, activityEvents, categories, transactions, users } from '../../db/schema';
 import { db } from '../../lib/deps';
 import { parse } from '../../lib/errors';

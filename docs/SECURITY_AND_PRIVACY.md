@@ -1,6 +1,6 @@
 # Security & Privacy
 
-This page describes the controls that are actually implemented and tested, the known gaps, and what an operator must do when deploying. **FamilyPulse has not been assessed against GLBA, GDPR, CCPA, PCI DSS or any other regulatory framework, and makes no compliance claims.**
+This page describes the controls that are actually implemented and tested, the known gaps, and what an operator must do when deploying. **SynerPulse has not been assessed against GLBA, GDPR, CCPA, PCI DSS or any other regulatory framework, and makes no compliance claims.**
 
 ## Threat model (summary)
 The assets are household financial records, personal notes and receipts, and user credentials. The main threats: account takeover, one household reading or changing another's data, a member exceeding their role, private data leaking to other members, injection (SQL, XSS, CSV formulas), CSRF, data persisting on shared devices, and secrets or PII leaking through logs.
@@ -26,12 +26,12 @@ The assets are household financial records, personal notes and receipts, and use
 | Caching | API responses `Cache-Control: no-store`; the service worker caches the **app shell only**, never API data | `app.ts`, `vite.config.ts` | `auth.test` |
 | Offline data | IndexedDB holds only entries typed while offline, until they sync; cleared on sign-out and account deletion | `web/lib/outbox.ts` | e2e `offline` |
 | Logging | Method, path (IDs masked), status and duration only; bodies and query strings never logged; redaction of cookies, auth, password, token and email keys | `app.ts`, `lib/logger.ts` | review |
-| Public demo | Shared demo accounts (`*@sample.familypulse.test`, fictional data) cannot change password, profile or sessions, delete the account or household, manage members, invite, create or join households, or receive reset emails. The demo household is wiped and re-seeded when it is older than `DEMO_RESET_HOURS`. | `lib/http.ts › forbidDemo`, `modules/demo` | `demo.test` |
+| Public demo | Shared demo accounts (`*@sample.synerpulse.test`, fictional data) cannot change password, profile or sessions, delete the account or household, manage members, invite, create or join households, or receive reset emails. The demo household is wiped and re-seeded when it is older than `DEMO_RESET_HOURS`. | `lib/http.ts › forbidDemo`, `modules/demo` | `demo.test` |
 | Errors | Unknown errors return a generic 500; stack traces and SQL stay server-side | `lib/errors.ts` | `auth.test` |
 | Secrets | Configuration comes from environment variables only (`.env.example` contains no secrets); nothing secret is shipped to the browser | `config.ts` | review |
 
 ## Financial integrations
-FamilyPulse **never asks for or stores online-banking credentials**. Data comes from manual entry and CSV import. A provider interface exists for future aggregation (`services/providers.ts`). Such an integration must use the provider's token exchange, store only provider access tokens (encrypted at rest), and go through a security review.
+SynerPulse **never asks for or stores online-banking credentials**. Data comes from manual entry and CSV import. A provider interface exists for future aggregation (`services/providers.ts`). Such an integration must use the provider's token exchange, store only provider access tokens (encrypted at rest), and go through a security review.
 
 ## Privacy
 - **Data minimisation:** name, email, password hash, and the financial records users enter. No phone number, address, government ID or analytics trackers. Fonts are self-hosted, so the UI makes no third-party requests.

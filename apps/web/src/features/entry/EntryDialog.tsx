@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import { AlertTriangle, ArrowLeftRight, Lock } from 'lucide-react';
-import { categoryAllowed, type CategoryDTO, type Role, type TransactionDTO } from '@familypulse/shared/client';
+import { categoryAllowed, type CategoryDTO, type Role, type TransactionDTO } from '@synerpulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { useAccounts, useCategories, useHouseholdDetail, useInvalidate } from '../../lib/queries';

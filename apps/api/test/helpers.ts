@@ -21,7 +21,7 @@ export interface TestEnv {
  *  - default: embedded PGlite driver (fast).
  *  - TEST_DRIVER=pg: the production node-postgres driver, talking the real Postgres wire protocol to
  *    PGlite via pglite-socket — catches driver differences (type parsing, pooling) without a
- *    Postgres install. Run with `npm run test:pg -w @familypulse/api`.
+ *    Postgres install. Run with `npm run test:pg -w @synerpulse/api`.
  */
 export async function openTestDatabase(): Promise<Database> {
   if (process.env.TEST_DRIVER !== 'pg') return openDatabase({ pgliteDir: 'memory://' });
@@ -56,7 +56,7 @@ export async function createTestEnv(): Promise<TestEnv> {
 /** A cookie-persisting client that sends the CSRF header like the real web app does. */
 export function client(app: Express) {
   const agent = request.agent(app);
-  const h = (r: request.Test) => r.set('X-Requested-With', 'familypulse').set('Origin', ORIGIN);
+  const h = (r: request.Test) => r.set('X-Requested-With', 'synerpulse').set('Origin', ORIGIN);
   return {
     agent,
     get: (url: string) => agent.get(url),

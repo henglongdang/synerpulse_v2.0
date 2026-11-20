@@ -4,7 +4,7 @@
  */
 import { Router } from 'express';
 import { and, asc, eq, inArray, isNull, ne } from 'drizzle-orm';
-import { deleteAccountSchema } from '@familypulse/shared';
+import { deleteAccountSchema } from '@synerpulse/shared';
 import {
   accounts,
   activityEvents,
@@ -97,13 +97,13 @@ privacyRouter.get('/export', async (req, res) => {
   }
   const payload = {
     exportedAt: new Date().toISOString(),
-    format: 'familypulse-export/v1',
+    format: 'synerpulse-export/v1',
     note: 'Monetary values are integer cents. Signed amounts: negative = money out of the account.',
     profile,
     notifications: await db().select().from(notifications).where(eq(notifications.userId, user.id)),
     households: householdsOut,
   };
-  res.setHeader('Content-Disposition', `attachment; filename="familypulse-export-${new Date().toISOString().slice(0, 10)}.json"`);
+  res.setHeader('Content-Disposition', `attachment; filename="synerpulse-export-${new Date().toISOString().slice(0, 10)}.json"`);
   res.setHeader('Cache-Control', 'no-store');
   res.json(payload);
 });

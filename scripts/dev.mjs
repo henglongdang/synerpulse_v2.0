@@ -31,7 +31,7 @@ if (mode === 'demo' || mode === 'demo-reset') {
   // Idempotent: loads the fictional household only if it is not there yet.
   const seed = spawnSync(npx, ['tsx', 'src/db/seed-cli.ts'], { cwd: apiDir, env, stdio: 'inherit', shell: isWin });
   if (seed.status !== 0) process.exit(seed.status ?? 1);
-  console.log('Demo mode: sign in as mary@sample.familypulse.test / familypulse-demo at http://localhost:5173\n');
+  console.log('Demo mode: sign in as mary@sample.synerpulse.test / synerpulse-demo at http://localhost:5173\n');
 } else if (mode !== 'blank') {
   console.error(`Unknown mode "${mode}". Use: blank | demo | demo-reset`);
   process.exit(1);
