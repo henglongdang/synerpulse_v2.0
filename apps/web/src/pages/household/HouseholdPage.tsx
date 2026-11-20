@@ -17,7 +17,7 @@ import {
   type MemberDTO,
   type Role,
   type RuleDTO,
-} from '@familypulse/shared';
+} from '@familypulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { meKey, useHousehold } from '../../lib/session';
 import { useAccounts, useCategories, useGoals, useInvalidate, useMembers } from '../../lib/queries';

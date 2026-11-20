@@ -41,5 +41,20 @@ export default defineConfig({
   ],
   server: { port: 5173, proxy: { '/api': { target: API, changeOrigin: false } } },
   preview: { port: 4173, proxy: { '/api': { target: API, changeOrigin: false } } },
-  build: { sourcemap: false, target: 'es2022' },
+  build: {
+    sourcemap: false,
+    target: 'es2022',
+    rollupOptions: {
+      output: {
+        // Long-lived vendor chunks: unchanged libraries stay cached across app releases.
+        manualChunks: (id) => {
+          if (!id.includes('node_modules')) return undefined;
+          if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-router)[\\/]/.test(id)) return 'vendor-react';
+          if (id.includes('@tanstack')) return 'vendor-query';
+          if (/[\\/]node_modules[\\/](d3-|internmap)/.test(id)) return 'vendor-d3';
+          return undefined;
+        },
+      },
+    },
+  },
 });

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { can, type Capability, type HouseholdSummaryDTO, type MeDTO, type Scope } from '@familypulse/shared';
+import { can, type Capability, type HouseholdSummaryDTO, type MeDTO, type Scope } from '@familypulse/shared/client';
 import { api } from './api';
 import { clearOutbox } from './outbox';
 

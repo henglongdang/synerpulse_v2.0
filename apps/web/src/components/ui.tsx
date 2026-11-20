@@ -15,7 +15,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { AlertCircle, AlertTriangle, CheckCircle2, Lock, RefreshCw, Users, X } from 'lucide-react';
-import { centsToDecimalString, parseMoneyToCents } from '@familypulse/shared';
+import { centsToDecimalString, parseMoneyToCents } from '@familypulse/shared/client';
 import { ApiError } from '../lib/api';
 import { avatarColor, initials, money } from '../lib/format';
 

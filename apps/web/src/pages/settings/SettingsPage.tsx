@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle2, CircleSlash, Download, Laptop, LogOut, Smartphone } from 'lucide-react';
-import type { NotificationPrefs, SessionDTO } from '@familypulse/shared';
+import type { NotificationPrefs, SessionDTO } from '@familypulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { meKey, signOut, useHousehold } from '../../lib/session';
 import { useToast } from '../../lib/toast';

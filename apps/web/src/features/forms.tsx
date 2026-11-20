@@ -8,7 +8,7 @@ import {
   type AccountType,
   type GoalDTO,
   type RecurringDTO,
-} from '@familypulse/shared';
+} from '@familypulse/shared/client';
 import { api, ApiError } from '../lib/api';
 import { useHousehold } from '../lib/session';
 import { useAccounts, useCategories, useInvalidate } from '../lib/queries';

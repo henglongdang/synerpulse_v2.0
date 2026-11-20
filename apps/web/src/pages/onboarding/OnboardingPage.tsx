@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Check, PartyPopper, Plus } from 'lucide-react';
-import { CATEGORY_GROUP_LABELS, EXPENSE_GROUPS, FREQUENCY_LABELS, monthKey, type CategoryGroup } from '@familypulse/shared';
+import { CATEGORY_GROUP_LABELS, EXPENSE_GROUPS, FREQUENCY_LABELS, monthKey, type CategoryGroup } from '@familypulse/shared/client';
 import { api } from '../../lib/api';
 import { meKey, useHousehold } from '../../lib/session';
 import { useAccounts, useCategories, useGoals, useInvalidate, useRecurring } from '../../lib/queries';

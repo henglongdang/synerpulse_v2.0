@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Activity } from 'lucide-react';
-import type { ActivityDTO } from '@familypulse/shared';
+import type { ActivityDTO } from '@familypulse/shared/client';
 import { api, qs } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { relativeTime } from '../../lib/format';

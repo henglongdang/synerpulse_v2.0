@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
-import { SUPPORTED_CURRENCIES } from '@familypulse/shared';
+import { SUPPORTED_CURRENCIES } from '@familypulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { meKey, signOut } from '../../lib/session';
 import { Button, Field, FormError, Input, Select } from '../../components/ui';

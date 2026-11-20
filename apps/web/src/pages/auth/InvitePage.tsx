@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ROLE_DESCRIPTIONS, ROLE_LABELS, type Role } from '@familypulse/shared';
+import { ROLE_DESCRIPTIONS, ROLE_LABELS, type Role } from '@familypulse/shared/client';
 import { api } from '../../lib/api';
 import { meKey, useMe } from '../../lib/session';
 import { Button, ErrorState, FormError, PageLoading } from '../../components/ui';

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowDownUp, ChevronLeft, ChevronRight, CloudOff, Download, FileUp, Lock, MessageSquare, Paperclip, ReceiptText, RotateCcw, Search, Trash2, X } from 'lucide-react';
-import { addMonths, CATEGORY_GROUP_LABELS, EXPENSE_GROUPS, monthLabel, type Paginated, type SmartTipDTO, type TransactionDTO } from '@familypulse/shared';
+import { addMonths, CATEGORY_GROUP_LABELS, EXPENSE_GROUPS, monthLabel, type Paginated, type SmartTipDTO, type TransactionDTO } from '@familypulse/shared/client';
 import { api, qs } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { useAccounts, useCategories, useMembers } from '../../lib/queries';

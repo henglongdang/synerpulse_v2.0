@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import type { AccountDTO, CategoryDTO, GoalDTO, MemberDTO, RecurringDTO } from '@familypulse/shared';
+import type { AccountDTO, CategoryDTO, GoalDTO, MemberDTO, RecurringDTO } from '@familypulse/shared/client';
 import { api } from './api';
 import { useHousehold } from './session';
 

@@ -11,7 +11,7 @@ import {
   type BudgetMonthDTO,
   type GoalDTO,
   type RecurringDTO,
-} from '@familypulse/shared';
+} from '@familypulse/shared/client';
 import { api } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { useCategories, useGoals, useInvalidate, useRecurring } from '../../lib/queries';

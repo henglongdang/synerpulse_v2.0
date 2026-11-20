@@ -15,7 +15,7 @@ import {
   Plus,
   Wallet,
 } from 'lucide-react';
-import type { DashboardDTO, Scope, SmartTipDTO, UpcomingBillDTO } from '@familypulse/shared';
+import type { DashboardDTO, Scope, SmartTipDTO, UpcomingBillDTO } from '@familypulse/shared/client';
 import { api, qs } from '../../lib/api';
 import { useHousehold } from '../../lib/session';
 import { useInvalidate } from '../../lib/queries';

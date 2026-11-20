@@ -1,4 +1,4 @@
-import type { ApiErrorBody } from '@familypulse/shared';
+import type { ApiErrorBody } from '@familypulse/shared/client';
 
 /** Error thrown for any non-2xx API response, carrying the server's safe message and field details. */
 export class ApiError extends Error {

@@ -17,7 +17,7 @@ import {
   Settings,
   Users,
 } from 'lucide-react';
-import { ROLE_LABELS } from '@familypulse/shared';
+import { ROLE_LABELS } from '@familypulse/shared/client';
 import { signOut, useHousehold } from '../lib/session';
 import { flushOutbox, useOnline, useOutbox } from '../lib/outbox';
 import { useToast } from '../lib/toast';
