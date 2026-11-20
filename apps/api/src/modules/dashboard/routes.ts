@@ -65,7 +65,7 @@ dashboardRouter.get('/dashboard', async (req, res) => {
   const [accts, firstAcct] = await Promise.all([
     listAccounts(db(), h.id, user.id, { scope: q.scope }),
     db()
-      .select({ d: sql<string | null>`min(${accounts.openingDate})` })
+      .select({ d: sql<string | null>`min(${accounts.openingDate})::text` })
       .from(accounts)
       .where(accountVisibility(h.id, user.id, q.scope)),
   ]);

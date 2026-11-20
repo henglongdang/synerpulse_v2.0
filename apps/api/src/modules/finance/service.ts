@@ -256,7 +256,7 @@ export async function everydayBaseline(
 ): Promise<{ byCategory: { categoryId: string | null; monthlyCents: number }[]; basis: string }> {
   const thisMonthStart = startOfMonth(today);
   const earliestTxn = await exec
-    .select({ d: sql<string | null>`min(${transactions.date})` })
+    .select({ d: sql<string | null>`min(${transactions.date})::text` })
     .from(transactions)
     .innerJoin(accounts, eq(accounts.id, transactions.accountId))
     .where(and(eq(transactions.householdId, householdId), isNull(transactions.deletedAt), accountVisibility(householdId, userId, scope)));

@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "FamilyPulse — collaborative, anticipatory household finance platform (from 'Revolutionizing Household Finance', HCII 2025).",
+  "description": "FamilyPulse \u2014 collaborative, anticipatory household finance platform (from 'Revolutionizing Household Finance', HCII 2025).",
   "workspaces": [
     "packages/shared",
     "apps/api",
@@ -24,7 +24,8 @@
     "test": "npm run test -w @familypulse/shared && npm run test -w @familypulse/api && npm run test -w @familypulse/web",
     "test:e2e": "npm run test:e2e -w @familypulse/web",
     "lint": "eslint .",
-    "typecheck": "npm run typecheck -w @familypulse/shared && npm run typecheck -w @familypulse/api && npm run typecheck -w @familypulse/web"
+    "typecheck": "npm run typecheck -w @familypulse/shared && npm run typecheck -w @familypulse/api && npm run typecheck -w @familypulse/web",
+    "test:pg": "npm run test:pg -w @familypulse/api"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

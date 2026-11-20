@@ -2,19 +2,19 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import type { Express } from 'express';
 import { loadConfig } from '../src/config';
-import { openDatabase, type Database } from '../src/db/client';
+import { type Database } from '../src/db/client';
 import { setDeps } from '../src/lib/deps';
 import { createMemoryEmail } from '../src/services/email';
 import { createMemoryStorage } from '../src/services/storage';
 import { createApp } from '../src/app';
-import { ORIGIN } from './helpers';
+import { openTestDatabase, ORIGIN } from './helpers';
 
 // Rate limiting is disabled in the other suites; this one runs the app with it switched on.
 let app: Express;
 let database: Database;
 beforeAll(async () => {
   const config = loadConfig({ NODE_ENV: 'test', APP_ORIGIN: ORIGIN, RATE_LIMIT_ENABLED: 'true' } as NodeJS.ProcessEnv);
-  database = await openDatabase({ pgliteDir: 'memory://' });
+  database = await openTestDatabase();
   await database.migrate();
   setDeps({ db: database.db, config, email: createMemoryEmail(), storage: createMemoryStorage() });
   app = createApp();

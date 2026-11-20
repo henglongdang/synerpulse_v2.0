@@ -27,12 +27,12 @@ function migrationsFolder(): string {
   return found;
 }
 
-export async function openDatabase(opts: { databaseUrl?: string; pgliteDir?: string }): Promise<Database> {
+export async function openDatabase(opts: { databaseUrl?: string; pgliteDir?: string; poolMax?: number }): Promise<Database> {
   if (opts.databaseUrl && /^postgres(ql)?:\/\//.test(opts.databaseUrl)) {
     const { Pool } = await import('pg');
     const { drizzle } = await import('drizzle-orm/node-postgres');
     const { migrate } = await import('drizzle-orm/node-postgres/migrator');
-    const pool = new Pool({ connectionString: opts.databaseUrl, max: 10 });
+    const pool = new Pool({ connectionString: opts.databaseUrl, max: opts.poolMax ?? 10 });
     const db = drizzle(pool, { schema });
     return {
       db,

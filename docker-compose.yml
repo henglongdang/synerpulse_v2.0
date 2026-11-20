@@ -1,0 +1,38 @@
+# Local production-like stack: FamilyPulse + PostgreSQL.
+#   docker compose up --build        → http://localhost:8080
+#   docker compose run --rm app node dist/seed.js --allow-production   (optional fictional demo data)
+# Untested on the development machine (Docker unavailable) — see docs/DEPLOYMENT.md.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: familypulse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-locally}
+      POSTGRES_DB: familypulse
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U familypulse -d familypulse']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '8080:4000'
+    environment:
+      DATABASE_URL: postgres://familypulse:${POSTGRES_PASSWORD:-change-me-locally}@db:5432/familypulse
+      APP_ORIGIN: http://localhost:8080
+      # Plain HTTP on localhost only. Behind TLS in real deployments, remove this line (secure cookies are the default).
+      COOKIE_SECURE: 'false'
+      EMAIL_TRANSPORT: console
+    volumes:
+      - uploads:/data/uploads
+
+volumes:
+  pgdata:
+  uploads:

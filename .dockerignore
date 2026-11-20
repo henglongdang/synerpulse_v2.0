@@ -1,0 +1,15 @@
+**/node_modules
+**/dist
+**/dev-dist
+**/data
+**/uploads
+**/coverage
+**/playwright-report
+**/test-results
+apps/web/e2e/.artifacts
+.git
+.env
+.env.*
+!.env.example
+HCII 2025 International Paper
+Prompt.md

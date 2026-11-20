@@ -16,9 +16,36 @@ export interface TestEnv {
   close(): Promise<void>;
 }
 
+/**
+ * Opens a fresh database for one test file.
+ *  - default: embedded PGlite driver (fast).
+ *  - TEST_DRIVER=pg: the production node-postgres driver, talking the real Postgres wire protocol to
+ *    PGlite via pglite-socket — catches driver differences (type parsing, pooling) without a
+ *    Postgres install. Run with `npm run test:pg -w @familypulse/api`.
+ */
+export async function openTestDatabase(): Promise<Database> {
+  if (process.env.TEST_DRIVER !== 'pg') return openDatabase({ pgliteDir: 'memory://' });
+  const { PGlite } = await import('@electric-sql/pglite');
+  const { PGLiteSocketServer } = await import('@electric-sql/pglite-socket');
+  const pglite = await PGlite.create();
+  const server = new PGLiteSocketServer({ db: pglite, port: 0, host: '127.0.0.1' });
+  await server.start();
+  // PGlite is single-connection; one pooled client mirrors that faithfully (and would deadlock on any
+  // code path that wrongly uses a second connection inside a transaction).
+  const database = await openDatabase({ databaseUrl: `postgres://postgres:postgres@${server.getServerConn()}/postgres`, poolMax: 1 });
+  return {
+    ...database,
+    close: async () => {
+      await database.close();
+      await server.stop();
+      await pglite.close();
+    },
+  };
+}
+
 export async function createTestEnv(): Promise<TestEnv> {
   const config = loadConfig({ NODE_ENV: 'test', PGLITE_DIR: 'memory://', APP_ORIGIN: ORIGIN } as NodeJS.ProcessEnv);
-  const database = await openDatabase({ pgliteDir: 'memory://' });
+  const database = await openTestDatabase();
   await database.migrate();
   const email = createMemoryEmail();
   setDeps({ db: database.db, config, email, storage: createMemoryStorage() });
