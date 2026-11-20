@@ -8,7 +8,6 @@ import {
   monthKey,
   ratioToBasisPoints,
   SCOPES,
-  todayISO,
   type AccountType,
   type ActivityDTO,
   type DashboardDTO,
@@ -17,7 +16,7 @@ import {
 import { accounts, activityEvents, categories, transactions, users } from '../../db/schema';
 import { db } from '../../lib/deps';
 import { parse } from '../../lib/errors';
-import { currentHousehold, currentUser } from '../../lib/http';
+import { currentHousehold, householdToday, currentUser } from '../../lib/http';
 import { accountVisibility, listAccounts } from '../accounts/service';
 import { budgetMonth, listGoals, listRecurring, netWorthHistory, periodTotals, upcomingBills } from '../finance/service';
 import { runForecast } from '../forecast/service';
@@ -59,7 +58,7 @@ dashboardRouter.get('/dashboard', async (req, res) => {
   const h = currentHousehold(req);
   const user = currentUser(req);
   const q = parse(z.object({ scope: z.enum(SCOPES).default('household'), range: z.enum(['1M', '6M', '1Y', 'ALL']).default('6M') }), req.query);
-  const today = todayISO();
+  const today = householdToday(h);
   void sweepHousehold(h.id); // throttled background alert evaluation
 
   const [accts, firstAcct] = await Promise.all([
@@ -185,7 +184,7 @@ dashboardRouter.get('/dashboard', async (req, res) => {
 dashboardRouter.get('/insights', async (req, res) => {
   const h = currentHousehold(req);
   const user = currentUser(req);
-  const today = todayISO();
+  const today = householdToday(h);
   const [budget, goals, recurring, forecast] = await Promise.all([
     budgetMonth(db(), h.id, user.id, monthKey(today), today),
     listGoals(db(), h.id, today),
@@ -207,7 +206,7 @@ dashboardRouter.get('/spending', async (req, res) => {
   const h = currentHousehold(req);
   const user = currentUser(req);
   const q = parse(z.object({ month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).optional(), scope: z.enum(SCOPES).default('household') }), req.query);
-  const month = q.month ?? monthKey(todayISO());
+  const month = q.month ?? monthKey(householdToday(h));
   const from = `${month}-01`;
   const to = addDays(addMonths(from, 1), -1);
   const totalExpr = sql<number>`coalesce(sum(-${transactions.amountCents}), 0)::bigint`;

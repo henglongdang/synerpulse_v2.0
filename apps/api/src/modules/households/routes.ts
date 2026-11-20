@@ -32,9 +32,9 @@ export const householdRouter = Router({ mergeParams: true });
 householdsRootRouter.post('/households', requireAuth, async (req, res) => {
   const input = parse(createHouseholdSchema, req.body);
   const user = currentUser(req);
-  const id = await db().transaction((tx) => createHousehold(tx, { name: input.name, currency: input.currency, ownerId: user.id }));
+  const id = await db().transaction((tx) => createHousehold(tx, { name: input.name, currency: input.currency, timezone: input.timezone, ownerId: user.id }));
   await db().update(users).set({ lastHouseholdId: id }).where(eq(users.id, user.id));
-  res.status(201).json({ household: { id, name: input.name, currency: input.currency, role: 'owner', isSample: false, memberCount: 1, onboardedAt: null } });
+  res.status(201).json({ household: { id, name: input.name, currency: input.currency, timezone: input.timezone, role: 'owner', isSample: false, memberCount: 1, onboardedAt: null } });
 });
 
 // ---------- invitation acceptance (token-based) ----------

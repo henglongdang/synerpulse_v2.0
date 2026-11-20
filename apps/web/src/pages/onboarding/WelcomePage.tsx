@@ -4,6 +4,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { SUPPORTED_CURRENCIES } from '@familypulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { meKey, signOut } from '../../lib/session';
+import { browserTimeZone } from '../../lib/format';
 import { Button, Field, FormError, Input, Select } from '../../components/ui';
 import { AuthLayout } from '../auth/AuthPages';
 
@@ -19,7 +20,7 @@ export function WelcomePage({ allowCancel }: { allowCancel?: boolean }) {
     setLoading(true);
     setError(null);
     try {
-      await api.post('/households', { name, currency });
+      await api.post('/households', { name, currency, timezone: browserTimeZone() });
       // Navigate before refreshing the session: once the household exists the router swaps route
       // tables, and the old URL (e.g. /register) would otherwise redirect to the dashboard first.
       navigate('/onboarding', { replace: true });

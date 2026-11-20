@@ -3,8 +3,11 @@
  * Names echo the personas in the prototype's user-flow diagram (Mary, Power, Luna, Liam).
  * All amounts are generated from a seeded PRNG relative to today's date; no real data is used.
  */
-import { and, eq } from 'drizzle-orm';
-import { addDays, addMonths, monthKey, startOfMonth, todayISO, type ISODate } from '@familypulse/shared';
+import { and, eq, sql } from 'drizzle-orm';
+import { addDays, addMonths, monthKey, startOfMonth, todayInZone, type ISODate } from '@familypulse/shared';
+
+/** The sample household lives in the machine's local time zone, so "today" matches the developer's clock. */
+export const SAMPLE_TIMEZONE = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 import type { DB, Tx } from './client';
 import {
   accounts,
@@ -53,7 +56,7 @@ export async function sampleExists(db: DB): Promise<boolean> {
   return rows.length > 0;
 }
 
-export async function seed(db: DB, today: ISODate = todayISO()): Promise<{ householdId: string }> {
+export async function seed(db: DB, today: ISODate = todayInZone(SAMPLE_TIMEZONE)): Promise<{ householdId: string }> {
   const rand = prng(20250622);
   const between = (min: number, max: number) => Math.round(min + rand() * (max - min));
   const pick = <T>(arr: readonly T[]) => arr[Math.floor(rand() * arr.length)];
@@ -67,7 +70,7 @@ export async function seed(db: DB, today: ISODate = todayISO()): Promise<{ house
   }
 
   return db.transaction(async (tx: Tx) => {
-    const householdId = await createHousehold(tx, { name: 'Okafor-Lin Household', currency: 'USD', ownerId: u.mary.id, isSample: true });
+    const householdId = await createHousehold(tx, { name: 'Okafor-Lin Household', currency: 'USD', timezone: SAMPLE_TIMEZONE, ownerId: u.mary.id, isSample: true });
     await tx.update(households).set({ onboardedAt: new Date() }).where(eq(households.id, householdId));
     for (const s of SAMPLE_USERS.filter((x) => x.role !== 'owner')) {
       await tx.insert(householdMembers).values({ householdId, userId: u[s.key].id, role: s.role });
@@ -90,6 +93,7 @@ export async function seed(db: DB, today: ISODate = todayISO()): Promise<{ house
       id: householdId,
       name: 'Okafor-Lin Household',
       currency: 'USD',
+      timezone: SAMPLE_TIMEZONE,
       isSample: true,
       role,
       categoryScope: [],
@@ -289,6 +293,15 @@ export async function seed(db: DB, today: ISODate = todayISO()): Promise<{ house
       adjustments: [{ kind: 'income_change', recurringId: freelanceId, basisPoints: -3000 }],
       createdBy: u.power.id,
     });
+    // Realistic history: stamp each seeded activity event (and the comment thread) with the date of
+    // the entry it describes, and the household's setup events with the opening date.
+    await tx.execute(sql`update activity_events set created_at = ${`${opening}T09:00:00Z`}::timestamptz where household_id = ${householdId}`);
+    await tx.execute(sql`
+      update activity_events ae set created_at = least(now(), (t.date::timestamp + interval '19 hours') at time zone 'UTC')
+      from transactions t where ae.entity_id = t.id and ae.household_id = ${householdId}`);
+    await tx.execute(sql`
+      update transaction_comments c set created_at = least(now(), (t.date::timestamp + interval '1 day 20 hours') at time zone 'UTC')
+      from transactions t where c.transaction_id = t.id and c.household_id = ${householdId}`);
     void recIds;
     return { householdId };
   });

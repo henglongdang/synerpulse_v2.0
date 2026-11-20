@@ -84,6 +84,8 @@ export const households = pgTable('households', {
   id: uuid('id').primaryKey(),
   name: text('name').notNull(),
   currency: text('currency').notNull().default('USD'),
+  /** IANA time zone — defines the household's "today" (budget month, due dates, forecast start). */
+  timezone: text('timezone').notNull().default('UTC'),
   /** True for the demo household created by the seed script — surfaced in the UI as "Sample data". */
   isSample: boolean('is_sample').notNull().default(false),
   onboardedAt: ts('onboarded_at'),

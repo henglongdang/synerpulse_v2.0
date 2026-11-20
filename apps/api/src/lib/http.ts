@@ -1,6 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { and, eq } from 'drizzle-orm';
-import { can, type Capability, type Role } from '@familypulse/shared';
+import { can, todayInZone, type Capability, type Role } from '@familypulse/shared';
 import { db, deps } from './deps';
 import { AppError, forbidden, notFound, unauthorized } from './errors';
 import { householdMembers, households, memberCategoryScopes } from '../db/schema';
@@ -15,6 +15,7 @@ export interface HouseholdCtx {
   id: string;
   name: string;
   currency: string;
+  timezone: string;
   isSample: boolean;
   role: Role;
   /** Category ids a scoped contributor may edit (empty = unrestricted). */
@@ -59,6 +60,7 @@ export async function loadHousehold(req: Request, _res: Response, next: NextFunc
       id: households.id,
       name: households.name,
       currency: households.currency,
+      timezone: households.timezone,
       isSample: households.isSample,
       role: householdMembers.role,
     })
@@ -78,6 +80,11 @@ export async function loadHousehold(req: Request, _res: Response, next: NextFunc
   }
   req.household = { ...row, categoryScope };
   next();
+}
+
+/** The household's calendar date (its own time zone), used for budgets, due dates and validation. */
+export function householdToday(h: Pick<HouseholdCtx, 'timezone'>): string {
+  return todayInZone(h.timezone);
 }
 
 export function requireCap(capability: Capability): RequestHandler {

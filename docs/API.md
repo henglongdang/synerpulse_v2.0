@@ -44,11 +44,11 @@ Base path `/api`. JSON in and out. All money values are **integer cents**. Perce
 
 | Method & path | cap | Purpose |
 |---|---|---|
-| POST `/households` `{name,currency}` | signed in | Create a household (caller becomes owner; default categories are created). |
+| POST `/households` `{name,currency,timezone?}` | signed in | Create a household (caller becomes owner; default categories are created). |
 | GET `/invitations/:token` | – | Preview an invitation: household, inviter, role, status. |
 | POST `/invitations/:token/accept` | signed in | Join. Email-locked invites require the matching email; used, expired or revoked invites return 410. |
 | GET `/households/:hid` | member | Household (your role and category scope) plus members. |
-| PATCH `/households/:hid` `{name?,currency?}` | household.update | Rename, or change the currency label. |
+| PATCH `/households/:hid` `{name?,currency?,timezone?}` | household.update | Rename, change the currency label, or change the time zone (IANA; it sets the household's "today"). |
 | DELETE `/households/:hid` `{confirmName}` | household.delete (owner) | Delete everything. |
 | POST `/households/:hid/onboarded` | household.update | Mark setup complete. |
 | GET `/households/:hid/members` | member | List members with roles and scopes. |

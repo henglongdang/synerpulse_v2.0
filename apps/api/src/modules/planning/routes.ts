@@ -15,7 +15,6 @@ import {
   monthLabel,
   saveBudgetSchema,
   saveScenarioSchema,
-  todayISO,
   updateGoalSchema,
   updateRecurringSchema,
   zMonth,
@@ -35,7 +34,7 @@ import {
 import { db } from '../../lib/deps';
 import { newId } from '../../lib/crypto';
 import { badRequest, forbidden, notFound, parse } from '../../lib/errors';
-import { assertCap, currentHousehold, currentUser, idParam, requireCap } from '../../lib/http';
+import { assertCap, currentHousehold, householdToday, currentUser, idParam, requireCap } from '../../lib/http';
 import { logActivity } from '../../lib/activity';
 import { budgetMonth, listGoals, listRecurring, periodTotals, planForMonth, toRecurringDTO } from '../finance/service';
 import { stepAfter } from '../finance/recurrence';
@@ -51,7 +50,7 @@ planningRouter.get('/budgets/overview', async (req, res) => {
   const h = currentHousehold(req);
   const user = currentUser(req);
   const { months } = parse(z.object({ months: z.coerce.number().int().min(1).max(24).default(6) }), req.query);
-  const today = todayISO();
+  const today = householdToday(h);
   const series = [];
   for (let i = months - 1; i >= 0; i--) {
     const start = addMonths(`${monthKey(today)}-01`, -i);
@@ -64,7 +63,7 @@ planningRouter.get('/budgets/overview', async (req, res) => {
 planningRouter.get('/budgets/:month', async (req, res) => {
   const h = currentHousehold(req);
   const month = parse(zMonth, req.params.month);
-  res.json({ budget: await budgetMonth(db(), h.id, currentUser(req).id, month, todayISO()) });
+  res.json({ budget: await budgetMonth(db(), h.id, currentUser(req).id, month, householdToday(h)) });
 });
 
 /** Save (create or replace) the plan starting at `month`. Plans carry forward to later months. */
@@ -109,7 +108,7 @@ planningRouter.put('/budgets', requireCap('budgets.manage'), async (req, res) =>
     });
   });
   await afterLedgerChange(h.id);
-  res.json({ budget: await budgetMonth(db(), h.id, user.id, input.month, todayISO()) });
+  res.json({ budget: await budgetMonth(db(), h.id, user.id, input.month, householdToday(h)) });
 });
 
 /** Remove the plan that starts at `month` — the previous plan (if any) applies again ("restore"). */
@@ -129,20 +128,20 @@ planningRouter.delete('/budgets/:month', requireCap('budgets.manage'), async (re
     action: 'reset',
     summary: `reset the ${monthLabel(month, 'long')} budget${previous ? ` (the ${monthLabel(previous.plan.month, 'long')} plan applies again)` : ''}`,
   });
-  res.json({ budget: await budgetMonth(db(), h.id, currentUser(req).id, month, todayISO()) });
+  res.json({ budget: await budgetMonth(db(), h.id, currentUser(req).id, month, householdToday(h)) });
 });
 
 // ================================================================ goals
 planningRouter.get('/goals', async (req, res) => {
   const h = currentHousehold(req);
   const includeArchived = req.query.includeArchived === 'true';
-  res.json({ goals: await listGoals(db(), h.id, todayISO(), includeArchived) });
+  res.json({ goals: await listGoals(db(), h.id, householdToday(h), includeArchived) });
 });
 
 planningRouter.post('/goals', requireCap('goals.manage'), async (req, res) => {
   const h = currentHousehold(req);
   const input = parse(createGoalSchema, req.body);
-  if (input.targetDate && input.targetDate <= todayISO()) throw badRequest('Pick a target date in the future', { targetDate: ['Must be in the future'] });
+  if (input.targetDate && input.targetDate <= householdToday(h)) throw badRequest('Pick a target date in the future', { targetDate: ['Must be in the future'] });
   const id = newId();
   await db()
     .insert(goals)
@@ -155,7 +154,7 @@ planningRouter.post('/goals', requireCap('goals.manage'), async (req, res) => {
     action: 'created',
     summary: `created the goal “${input.name}” (${formatCents(input.targetCents, h.currency, { noCents: true })})`,
   });
-  const list = await listGoals(db(), h.id, todayISO());
+  const list = await listGoals(db(), h.id, householdToday(h));
   res.status(201).json({ goal: list.find((g) => g.id === id) });
 });
 
@@ -178,7 +177,7 @@ planningRouter.patch('/goals/:goalId', requireCap('goals.manage'), async (req, r
     action: archived ? 'archived' : 'updated',
     summary: `${archived ? 'archived' : 'updated'} the goal “${rows[0].name}”`,
   });
-  const list = await listGoals(db(), h.id, todayISO(), true);
+  const list = await listGoals(db(), h.id, householdToday(h), true);
   res.json({ goal: list.find((g) => g.id === id) });
 });
 
@@ -216,7 +215,7 @@ planningRouter.post('/goals/:goalId/contributions', requireCap('goals.contribute
     .where(and(eq(goals.id, id), eq(goals.householdId, h.id)));
   if (!goal) throw notFound('Goal');
   if (goal.archivedAt) throw badRequest('This goal is archived');
-  if (input.date > todayISO()) throw badRequest('Contributions cannot be dated in the future');
+  if (input.date > householdToday(h)) throw badRequest('Contributions cannot be dated in the future');
   if (input.amountCents < 0) {
     const [{ saved }] = await db()
       .select({ saved: sql<number>`coalesce(sum(${goalContributions.amountCents}), 0)::bigint` })
@@ -236,7 +235,7 @@ planningRouter.post('/goals/:goalId/contributions', requireCap('goals.contribute
     summary: `${input.amountCents > 0 ? 'added' : 'withdrew'} ${formatCents(Math.abs(input.amountCents), h.currency)} ${input.amountCents > 0 ? 'to' : 'from'} “${goal.name}”`,
   });
   await evaluateGoals(h.id);
-  const list = await listGoals(db(), h.id, todayISO());
+  const list = await listGoals(db(), h.id, householdToday(h));
   res.status(201).json({ goal: list.find((g) => g.id === id) });
 });
 
@@ -403,7 +402,7 @@ planningRouter.post('/recurring/:recurringId/pay', async (req, res) => {
         accountId,
         type: item.kind === 'income' ? 'income' : 'expense',
         amountCents: input.amountCents ?? item.amountCents,
-        date: input.date ?? (item.nextDate <= todayISO() ? item.nextDate : todayISO()),
+        date: input.date ?? (item.nextDate <= householdToday(h) ? item.nextDate : householdToday(h)),
         description: item.label,
         categoryId: item.categoryId,
         tags: [],
@@ -448,7 +447,7 @@ planningRouter.post('/recurring/:recurringId/skip', async (req, res) => {
 planningRouter.post('/forecast', async (req, res) => {
   const h = currentHousehold(req);
   const input = parse(forecastRequestSchema, req.body ?? {});
-  res.json({ forecast: await runForecast(db(), h.id, currentUser(req).id, input) });
+  res.json({ forecast: await runForecast(db(), h.id, currentUser(req).id, input, householdToday(h)) });
 });
 
 function toScenarioDTO(s: typeof scenarios.$inferSelect, by: string | null): ScenarioDTO {

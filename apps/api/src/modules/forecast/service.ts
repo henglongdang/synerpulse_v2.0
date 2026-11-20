@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { DEFAULT_NOTIFICATION_PREFS, todayISO, type ForecastRequest, type ForecastResultDTO } from '@familypulse/shared';
+import { DEFAULT_NOTIFICATION_PREFS, type ForecastRequest, type ForecastResultDTO } from '@familypulse/shared';
 import type { Executor } from '../../db/client';
 import { recurringItems, users } from '../../db/schema';
 import { everydayBaseline, listGoals, listRecurring, liquidAccounts } from '../finance/service';
@@ -10,7 +10,8 @@ export async function runForecast(
   householdId: string,
   userId: string,
   req: ForecastRequest,
-  today: string = todayISO(),
+  /** The household's calendar date (see householdToday). */
+  today: string,
 ): Promise<ForecastResultDTO> {
   const [liquid, recurring, goalList, [user]] = await Promise.all([
     liquidAccounts(exec, householdId, userId, req.scope),

@@ -22,7 +22,7 @@ import { api, ApiError } from '../../lib/api';
 import { meKey, useHousehold } from '../../lib/session';
 import { useAccounts, useCategories, useGoals, useInvalidate, useMembers } from '../../lib/queries';
 import { useToast } from '../../lib/toast';
-import { localToday, money, relativeTime, shortDate } from '../../lib/format';
+import { localToday, money, relativeTime, shortDate, timeZoneOptions } from '../../lib/format';
 import { Avatar, Button, ConfirmDialog, Dialog, EmptyState, ErrorState, Field, FormError, Input, MoneyInput, Select, Skeleton, Tabs, VisibilityBadge } from '../../components/ui';
 import { AccountIcon, CategoryIcon } from '../../components/icons';
 import { AccountForm } from '../../features/forms';
@@ -963,6 +963,7 @@ function HouseholdSettings() {
   const toast = useToast();
   const [name, setName] = useState(household.name);
   const [currency, setCurrency] = useState(household.currency);
+  const [timezone, setTimezone] = useState(household.timezone);
   const [confirm, setConfirm] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<unknown>(null);
@@ -981,6 +982,15 @@ function HouseholdSettings() {
           <Field label="Name">
             <Input value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
           </Field>
+          <Field label="Time zone" hint="Sets the household’s “today”: the budget month, due dates and the forecast start.">
+            <Select value={timezone} onChange={(e) => setTimezone(e.target.value)}>
+              {timeZoneOptions(timezone).map((z) => (
+                <option key={z} value={z}>
+                  {z.replace(/_/g, ' ')}
+                </option>
+              ))}
+            </Select>
+          </Field>
           <Field label="Currency" hint="Changing it relabels amounts; it does not convert them.">
             <Select value={currency} onChange={(e) => setCurrency(e.target.value)}>
               {SUPPORTED_CURRENCIES.map((c) => (
@@ -995,7 +1005,7 @@ function HouseholdSettings() {
             onClick={async () => {
               setError(null);
               try {
-                await api.patch(base, { name, currency });
+                await api.patch(base, { name, currency, timezone });
                 await qc.invalidateQueries();
                 toast.success('Household updated');
               } catch (e) {

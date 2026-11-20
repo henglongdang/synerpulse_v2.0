@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, addMonths, daysBetween, endOfMonth, isValidISODate, startOfWeek } from '../src/dates';
+import { addDays, addMonths, daysBetween, endOfMonth, isValidISODate, isValidTimeZone, startOfWeek, todayInZone } from '../src/dates';
 import { can, canAssignRole, canManageMember, categoryAllowed } from '../src/permissions';
 import { adjustmentSchema, createTransactionSchema, saveBudgetSchema } from '../src/schemas';
 
@@ -16,6 +16,15 @@ describe('dates', () => {
     expect(addMonths('2026-02-28', 1, 31)).toBe('2026-03-31');
     expect(addMonths('2026-12-15', 1)).toBe('2027-01-15');
     expect(addMonths('2026-01-15', -2)).toBe('2025-11-15');
+  });
+  it('computes "today" in the household time zone, not the server clock', () => {
+    const instant = new Date('2026-11-20T04:30:00Z'); // 8:30 pm Nov 19 in Los Angeles
+    expect(todayInZone('America/Los_Angeles', instant)).toBe('2026-11-19');
+    expect(todayInZone('UTC', instant)).toBe('2026-11-20');
+    expect(todayInZone('Asia/Tokyo', new Date('2026-11-19T16:00:00Z'))).toBe('2026-11-20');
+    expect(todayInZone('Not/AZone', instant)).toBe('2026-11-20');
+    expect(isValidTimeZone('Europe/Berlin')).toBe(true);
+    expect(isValidTimeZone('Mars/Olympus')).toBe(false);
   });
   it('does calendar arithmetic in UTC', () => {
     expect(addDays('2026-03-07', 2)).toBe('2026-03-09');
@@ -95,5 +104,15 @@ describe('schemas', () => {
   it('parses scenario adjustments', () => {
     expect(adjustmentSchema.parse({ kind: 'income_change', basisPoints: -3000 })).toMatchObject({ recurringId: null });
     expect(adjustmentSchema.safeParse({ kind: 'delay_bill', recurringId: base.accountId, days: 0 }).success).toBe(false);
+  });
+});
+
+describe('update schemas never inject defaults (Zod 4 .partial() keeps them)', () => {
+  it('a partial PATCH contains only the fields sent', async () => {
+    const { updateGoalSchema, updateRecurringSchema, updateHouseholdSchema, updateCategorySchema } = await import('../src/schemas');
+    expect(updateGoalSchema.parse({ archived: true })).toEqual({ archived: true });
+    expect(updateRecurringSchema.parse({ active: false })).toEqual({ active: false });
+    expect(updateHouseholdSchema.parse({ name: 'Renamed' })).toEqual({ name: 'Renamed' });
+    expect(updateCategorySchema.parse({ archived: true })).toEqual({ archived: true });
   });
 });

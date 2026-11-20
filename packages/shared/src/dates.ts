@@ -29,8 +29,30 @@ export function toISODate(d: Date): ISODate {
   return d.toISOString().slice(0, 10);
 }
 
+/** Today's date in UTC. Prefer `todayInZone(household.timezone)` for anything a user sees. */
 export function todayISO(now: Date = new Date()): ISODate {
   return toISODate(now);
+}
+
+export function isValidTimeZone(tz: string): boolean {
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone: tz });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The calendar date *in a time zone*. A household's "today" (budget month, bills due, forecast
+ * start) must follow the household's clock, not the server's: at 8 pm in Los Angeles it is
+ * already tomorrow in UTC. Unknown zones fall back to UTC.
+ */
+export function todayInZone(timeZone: string, now: Date = new Date()): ISODate {
+  if (!isValidTimeZone(timeZone)) return toISODate(now);
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+  const get = (t: string) => parts.find((p) => p.type === t)!.value;
+  return `${get('year')}-${get('month')}-${get('day')}`;
 }
 
 export function addDays(s: ISODate, n: number): ISODate {

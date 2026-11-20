@@ -15,8 +15,9 @@ Full-stack implementation of the HCII 2025 paper *Revolutionizing Household Fina
 
 ## Commands (run from the repo root)
 - `npm run db:seed`, then `npm run dev` → API :4000 plus web :5173. Demo login: `mary@sample.familypulse.test` / `familypulse-demo`
-- Tests: `npm test` (shared + api + web unit), `npm run test:e2e` (Playwright starts its own isolated API :4100 and web :5174)
+- Tests: `npm test` (shared + api + web unit), `npm run test:pg` (API suite through the production node-postgres driver), `npm run test:e2e` (Playwright starts its own isolated API :4100 and web :5174)
 - `npm run lint`, `npm run typecheck`, `npm run db:reset` (dev only)
+- Production: `npm run build`, then from `apps/api` run `npm start` (migrates, then serves the API + `WEB_DIST_DIR`). Docker: `docker compose up --build` (verified only by CI; see `docs/DEPLOYMENT.md`)
 
 ## Conventions and gotchas (learned the hard way)
 - **Money is integer cents** end to end; percentages are basis points. Never add floats to money.
@@ -24,6 +25,12 @@ Full-stack implementation of the HCII 2025 paper *Revolutionizing Household Fina
 - **Correlated subqueries must reference the outer table by literal name** (`"accounts"."id"`). Drizzle renders single-table columns unqualified, so they silently bind to the inner table.
 - Transactions use optimistic concurrency (`expectedVersion` → 409 with `current`). Every write appends to `transaction_revisions` and `activity_events`.
 - express-rate-limit limiters must be created at module load; they're toggled with `skip`.
-- Web: use the shared `ui.tsx` components, not new variants. Charts follow the dataviz rules: legend for ≥ 2 series, a table view, a true minus sign, one tick style per axis.
+- **A household's "today" is `householdToday(h)` / `todayInZone(tz)`**, never `todayISO()`, which is UTC. At 8 pm in Los Angeles, UTC is already tomorrow.
+- **Never build update schemas with `.partial()` over schemas that have `.default()`s.** Zod 4 keeps the defaults, so partial PATCHes silently reset fields. Write update schemas explicitly; the shared tests assert "no injected defaults".
+- Web imports `@familypulse/shared/client` (no Zod in the browser); the API imports `@familypulse/shared`.
+- Use the shared `ui.tsx` components, not new variants. Charts follow the dataviz rules: legend for ≥ 2 series, a table view, a true minus sign, one tick style per axis.
 - Windows/Git Bash: pass Windows paths to Node scripts (`cygpath -w`), set `MSYS_NO_PATHCONV=1` for `/`-style args, and avoid heredocs that contain typographic quotes (use the Write tool). Editors may turn `﻿` into a raw BOM, so use `charCodeAt(0) === 0xfeff`.
+- **Background servers on Windows.** Stopping the shell (TaskStop) leaves child `node` processes running, which lock `node_modules` and ports. Afterwards, stop leftovers in PowerShell: `Get-CimInstance Win32_Process -Filter "Name = 'node.exe'" | ? CommandLine -match 'FamilyPulse' | % { Stop-Process -Id $_.ProcessId -Force }`.
+- If `npm ls` crashes or packages vanish after an aborted install, run `npm ci` (after stopping servers).
+- In bash, don't chain `git commit` after a `grep` of test output: `grep` succeeds even when tests fail. Check the suites first.
 - Commit messages end with the Co-Authored-By line given in the session; commit at milestones.

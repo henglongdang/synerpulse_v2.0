@@ -56,4 +56,7 @@
 | Offline entry with idempotent sync and failure handling | ✅ | e2e offline |
 | Multi-currency, FX | ⏳ | One currency per household |
 | Dark mode | ⏳ | Tokens are ready for it |
-| Docker / deployment packaging | ⏳ | Next session |
+| Production build (API bundle + web, single origin) | ✅ | Verified in a browser under the production CSP |
+| Docker image + compose | 🟡 | Written; built and smoke-tested by CI only (no Docker locally) |
+| Household time zone ("today" for budgets, bills, alerts, forecast) | ✅ | N; auto-detected; `planning.test`, shared date tests |
+| CI (lint, types, tests on both DB drivers, E2E, Docker) | ✅ | `.github/workflows/ci.yml` (runs once pushed) |

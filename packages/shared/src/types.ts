@@ -41,6 +41,7 @@ export interface HouseholdSummaryDTO {
   id: string;
   name: string;
   currency: string;
+  timezone: string;
   role: Role;
   isSample: boolean;
   memberCount: number;

@@ -138,9 +138,22 @@ describe('CSV import', () => {
   });
 });
 
+describe('household time zone & settings', () => {
+  it('stores the creator’s time zone, rejects unknown zones, and keeps fields on a partial update', async () => {
+    const u = await registerUser(env.app);
+    expect((await u.c.post('/api/households', { name: 'Tokyo flat', currency: 'JPY', timezone: 'Mars/Olympus' })).status).toBe(400);
+    const h = (await u.c.post('/api/households', { name: 'Tokyo flat', currency: 'JPY', timezone: 'Asia/Tokyo' })).body.household.id;
+    // Regression: a rename-only PATCH must not reset currency or time zone to their defaults.
+    expect((await u.c.patch(`/api/households/${h}`, { name: 'Tokyo apartment' })).status).toBe(200);
+    const me = (await u.c.get('/api/auth/me')).body;
+    expect(me.households[0]).toMatchObject({ name: 'Tokyo apartment', currency: 'JPY', timezone: 'Asia/Tokyo' });
+    expect((await u.c.get(`/api/households/${h}`)).body.household.timezone).toBe('Asia/Tokyo');
+  });
+});
+
 describe('sample data, dashboard and privacy controls', () => {
   it('seeds a coherent fictional household whose dashboard figures reconcile', async () => {
-    const { householdId } = await seed(env.database.db, today);
+    const { householdId } = await seed(env.database.db); // seeds "today" in the sample household's own time zone
     await sweepHousehold(householdId, true);
     const mary = client(env.app);
     expect((await mary.post('/api/auth/login', { email: SAMPLE_USERS[0].email, password: SAMPLE_PASSWORD })).status).toBe(200);

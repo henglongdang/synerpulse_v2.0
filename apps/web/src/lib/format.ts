@@ -58,4 +58,23 @@ export function avatarColor(id: string): string {
   return AVATAR_COLORS[h % AVATAR_COLORS.length];
 }
 
+/** The browser's IANA time zone — new households adopt it so their "today" matches the creator's clock. */
+export function browserTimeZone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  } catch {
+    return 'UTC';
+  }
+}
+
+export function timeZoneOptions(current: string): string[] {
+  let zones: string[] = [];
+  try {
+    zones = (Intl as unknown as { supportedValuesOf?: (k: string) => string[] }).supportedValuesOf?.('timeZone') ?? [];
+  } catch {
+    zones = [];
+  }
+  return Array.from(new Set([current, 'UTC', ...zones]));
+}
+
 export const pct = (bp: number, digits = 0) => `${(bp / 100).toFixed(digits)}%`;

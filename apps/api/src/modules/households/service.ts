@@ -13,6 +13,7 @@ export async function listHouseholdsForUser(userId: string, preferredId: string 
       id: households.id,
       name: households.name,
       currency: households.currency,
+      timezone: households.timezone,
       isSample: households.isSample,
       onboardedAt: households.onboardedAt,
       role: householdMembers.role,
@@ -30,10 +31,10 @@ export async function listHouseholdsForUser(userId: string, preferredId: string 
 
 export async function createHousehold(
   exec: Executor,
-  input: { name: string; currency: string; ownerId: string; isSample?: boolean },
+  input: { name: string; currency: string; timezone?: string; ownerId: string; isSample?: boolean },
 ): Promise<string> {
   const id = newId();
-  await exec.insert(households).values({ id, name: input.name, currency: input.currency, isSample: input.isSample ?? false });
+  await exec.insert(households).values({ id, name: input.name, currency: input.currency, timezone: input.timezone ?? 'UTC', isSample: input.isSample ?? false });
   await exec.insert(householdMembers).values({ householdId: id, userId: input.ownerId, role: 'owner' });
   await exec.insert(categories).values(DEFAULT_CATEGORIES.map((c) => ({ id: newId(), householdId: id, ...c })));
   await logActivity(exec, {

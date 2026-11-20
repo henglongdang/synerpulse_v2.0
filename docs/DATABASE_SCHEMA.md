@@ -36,7 +36,7 @@ users ─< notifications (→ household?)
 | `users` | Accounts | `email` unique on `lower(email)`; `password_hash` (Argon2id); `notification_prefs` jsonb; `last_household_id` |
 | `sessions` | Server sessions | `token_hash` unique (SHA-256 of the cookie token); `expires_at`, `last_seen_at` (sliding); `user_agent` |
 | `password_reset_tokens` | Single-use reset | `token_hash` unique, `expires_at` (30 min), `used_at` |
-| `households` | Shared space | `currency` (ISO code, labels amounts), `is_sample` (demo data flag), `onboarded_at` |
+| `households` | Shared space | `currency` (ISO code, labels amounts), `timezone` (IANA, defines the household's "today"), `is_sample` (demo data flag), `onboarded_at` |
 | `household_members` | Membership and role | PK (household, user); `role` in owner/admin/contributor/viewer (CHECK); **partial unique index: one owner per household** |
 | `member_category_scopes` | Contributor edit limits | PK (household, user, category); composite FK → `household_members` |
 | `invitations` | Invite links | `token_hash` unique; `email` (optional lock); `role` (never owner); `category_scope` jsonb; `expires_at`, `accepted_at`, `revoked_at` |
@@ -62,4 +62,5 @@ users ─< notifications (→ household?)
 
 ## Migrations and seed
 - `0000_init.sql`: the full schema above.
+- `0001_household_timezone.sql`: adds `households.timezone` (default `UTC`; additive and safe).
 - `npm run db:seed` loads **one fictional household** ("Okafor-Lin Household", `is_sample = true`) with six months of generated activity. It refuses to run against a production database unless `--allow-production` is passed. `npm run db:reset` wipes the development database (PGlite directory, or `drop schema` with `--yes` on Postgres; disabled in production).

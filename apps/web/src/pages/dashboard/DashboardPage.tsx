@@ -233,9 +233,9 @@ function DashboardBody({
   const historyLabels = d.history.map((p) => shortDate(p.date));
   return (
     <div className={`grid-main-side ${refetching ? '' : ''}`}>
-      <div className="stack" style={{ gap: 20 }}>
+      <div className="stack dash-col" style={{ gap: 20 }}>
         {/* Net worth */}
-        <section className="card card-chamfer" aria-labelledby="nw-title">
+        <section className="card card-chamfer dash-nw" aria-labelledby="nw-title">
           <div className="card-body stack" style={{ gap: 12 }}>
             <div className="spread" style={{ alignItems: 'flex-start', flexWrap: 'wrap' }}>
               <div>
@@ -316,7 +316,7 @@ function DashboardBody({
         </section>
 
         {/* Budget + forecast */}
-        <div className="grid-2">
+        <div className="grid-2 dash-pulse">
           <section className="card" aria-labelledby="bud-title">
             <div className="card-head">
               <h2 id="bud-title">This month’s budget</h2>
@@ -380,7 +380,7 @@ function DashboardBody({
         </div>
 
         {/* Goals */}
-        <section className="card" aria-labelledby="goals-title">
+        <section className="card dash-goals" aria-labelledby="goals-title">
           <div className="card-head">
             <h2 id="goals-title">Financial goals</h2>
             <Link to="/budget#goals" className="small">
@@ -409,7 +409,7 @@ function DashboardBody({
         </section>
 
         {/* Accounts (prototype's expandable rows) */}
-        <section className="card" aria-labelledby="acct-title">
+        <section className="card dash-accounts" aria-labelledby="acct-title">
           <div className="card-head">
             <h2 id="acct-title">Accounts</h2>
             <Link to="/household?tab=accounts" className="small">
@@ -469,8 +469,8 @@ function DashboardBody({
       </div>
 
       {/* Side column */}
-      <div className="stack" style={{ gap: 20 }}>
-        <section className="card" aria-labelledby="tips-title">
+      <div className="stack dash-col" style={{ gap: 20 }}>
+        <section className="card dash-tips" aria-labelledby="tips-title">
           <div className="card-head">
             <h2 id="tips-title">Smart tips</h2>
             <span className="xs muted">Rule-based</span>
@@ -479,7 +479,7 @@ function DashboardBody({
             <TipList tips={d.tips} />
           </div>
         </section>
-        <section className="card" aria-labelledby="bills-title">
+        <section className="card dash-bills" aria-labelledby="bills-title">
           <div className="card-head">
             <h2 id="bills-title">
               <CalendarClock size={16} style={{ display: 'inline', verticalAlign: '-3px', marginRight: 6 }} />
@@ -501,7 +501,7 @@ function DashboardBody({
             </ul>
           )}
         </section>
-        <section className="card" aria-labelledby="act-title">
+        <section className="card dash-activity" aria-labelledby="act-title">
           <div className="card-head">
             <h2 id="act-title">Household activity</h2>
             <Link to="/activity" className="small">

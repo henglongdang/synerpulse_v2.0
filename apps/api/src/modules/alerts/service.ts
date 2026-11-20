@@ -9,7 +9,7 @@
  *  - goal reached / halfway        (after contributions)
  */
 import { eq } from 'drizzle-orm';
-import { formatCents, monthKey, monthLabel, todayISO } from '@familypulse/shared';
+import { formatCents, monthKey, monthLabel, todayInZone } from '@familypulse/shared';
 import { householdMembers, households } from '../../db/schema';
 import { db, deps } from '../../lib/deps';
 import { logger } from '../../lib/logger';
@@ -21,12 +21,18 @@ async function membersOf(householdId: string) {
   return db().select({ userId: householdMembers.userId, role: householdMembers.role }).from(householdMembers).where(eq(householdMembers.householdId, householdId));
 }
 
+async function householdTodayById(householdId: string): Promise<string> {
+  const [h] = await db().select({ tz: households.timezone }).from(households).where(eq(households.id, householdId));
+  return todayInZone(h?.tz ?? 'UTC');
+}
+
 async function householdInfo(householdId: string) {
   const [h] = await db().select({ name: households.name, currency: households.currency }).from(households).where(eq(households.id, householdId));
   return h;
 }
 
-export async function evaluateBudgets(householdId: string, today = todayISO()): Promise<void> {
+export async function evaluateBudgets(householdId: string, todayOverride?: string): Promise<void> {
+  const today = todayOverride ?? (await householdTodayById(householdId));
   const info = await householdInfo(householdId);
   if (!info) return;
   const members = await membersOf(householdId);
@@ -67,7 +73,8 @@ export async function evaluateBudgets(householdId: string, today = todayISO()): 
   }
 }
 
-export async function evaluateGoals(householdId: string, today = todayISO()): Promise<void> {
+export async function evaluateGoals(householdId: string, todayOverride?: string): Promise<void> {
+  const today = todayOverride ?? (await householdTodayById(householdId));
   try {
     const members = await membersOf(householdId);
     const prefs = await prefsForUsers(db(), members.map((m) => m.userId));
@@ -103,7 +110,8 @@ export async function evaluateGoals(householdId: string, today = todayISO()): Pr
   }
 }
 
-export async function evaluateBills(householdId: string, today = todayISO()): Promise<void> {
+export async function evaluateBills(householdId: string, todayOverride?: string): Promise<void> {
+  const today = todayOverride ?? (await householdTodayById(householdId));
   const info = await householdInfo(householdId);
   const members = await membersOf(householdId);
   const prefs = await prefsForUsers(db(), members.map((m) => m.userId));
@@ -126,7 +134,8 @@ export async function evaluateBills(householdId: string, today = todayISO()): Pr
   }
 }
 
-export async function evaluateForecast(householdId: string, today = todayISO()): Promise<void> {
+export async function evaluateForecast(householdId: string, todayOverride?: string): Promise<void> {
+  const today = todayOverride ?? (await householdTodayById(householdId));
   const info = await householdInfo(householdId);
   const members = await membersOf(householdId);
   const prefs = await prefsForUsers(db(), members.map((m) => m.userId));

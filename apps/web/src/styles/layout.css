@@ -605,3 +605,18 @@
     border-top: 1px solid var(--line);
   }
 }
+
+/* Single-column dashboard (tablet/phone): surface what needs attention before reference panels.
+   Order: net worth → budget & forecast → tips → bills → goals → accounts → activity. */
+@media (max-width: 1023px) {
+  .dash-col {
+    display: contents;
+  }
+  .dash-nw { order: 1; }
+  .dash-pulse { order: 2; }
+  .dash-tips { order: 3; }
+  .dash-bills { order: 4; }
+  .dash-goals { order: 5; }
+  .dash-accounts { order: 6; }
+  .dash-activity { order: 7; }
+}

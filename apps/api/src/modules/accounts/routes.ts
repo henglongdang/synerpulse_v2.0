@@ -7,7 +7,6 @@ import {
   createAccountSchema,
   LIABILITY_TYPES,
   SCOPES,
-  todayISO,
   updateAccountSchema,
   formatCents,
 } from '@familypulse/shared';
@@ -15,7 +14,7 @@ import { accounts, transactions } from '../../db/schema';
 import { db } from '../../lib/deps';
 import { newId } from '../../lib/crypto';
 import { badRequest, forbidden, parse } from '../../lib/errors';
-import { currentHousehold, currentUser, idParam, type HouseholdCtx, type AuthUser } from '../../lib/http';
+import { currentHousehold, householdToday, currentUser, idParam, type HouseholdCtx, type AuthUser } from '../../lib/http';
 import { logActivity } from '../../lib/activity';
 import { accountBalance, getVisibleAccount, listAccounts, toAccountDTO } from './service';
 import { recordRevision } from '../transactions/service';
@@ -44,7 +43,7 @@ accountsRouter.post('/', async (req, res) => {
   const user = currentUser(req);
   const input = parse(createAccountSchema, req.body);
   assertCanManage(h, user, { visibility: input.visibility, ownerUserId: user.id });
-  if (input.openingDate > todayISO()) throw badRequest('Opening date cannot be in the future', { openingDate: ['Cannot be in the future'] });
+  if (input.openingDate > householdToday(h)) throw badRequest('Opening date cannot be in the future', { openingDate: ['Cannot be in the future'] });
   const isLiability = LIABILITY_TYPES.includes(input.type);
   if (isLiability && input.openingBalanceCents > 0) {
     throw badRequest('Enter what you owe as a negative balance, e.g. -500.00', {
@@ -123,7 +122,7 @@ accountsRouter.post('/:accountId/balance', async (req, res) => {
   assertCanManage(h, user, account);
   const input = parse(balanceUpdateSchema, req.body);
   if (input.date < account.openingDate) throw badRequest('Date is before the account was opened');
-  if (input.date > todayISO()) throw badRequest('Date cannot be in the future');
+  if (input.date > householdToday(h)) throw badRequest('Date cannot be in the future');
   const current = await accountBalance(db(), account.id);
   const diff = input.balanceCents - current;
   if (diff === 0) {

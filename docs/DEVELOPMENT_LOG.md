@@ -2,34 +2,63 @@
 
 ## Next session: start here
 
-**State at the end of session 1 (2026-11-19):** the product is functional end to end. Backend, database, auth, all five research modules, the web app, mobile layouts, the PWA shell and offline entry are done. All automated tests pass (see *Verification* below). The remaining work is mostly **documentation, deployment packaging and polish**.
+**State at the end of session 2 (2026-11-19):** feature-complete for v2.0 and deployment-ready on paper.
 
-Do these in order:
+- Production build: the API bundle plus the web build, served from one origin, were verified in a browser under the production CSP.
+- Docker and compose files exist but are **unbuilt locally** (no Docker here). The CI workflow builds and smoke-tests the image once the repo is pushed to GitHub.
+- All documents the brief requires are written.
+- Every suite is green; see *Session 2 → Verification*.
 
-1. **API production build.** `apps/api/package.json` has `"build": "tsup"`, but `tsup.config.ts` does not exist yet.
-   - Create it: entry `src/index.ts`, format `esm`, target `node20`, `noExternal: ['@familypulse/shared']`. Keep `@electric-sql/pglite`, `pg` and `@node-rs/argon2` external.
-   - Copy `drizzle/` next to `dist/`; `db/client.ts` already looks in `../drizzle`.
-   - Verify with `npm run build && WEB_DIST_DIR=../web/dist npm start`.
-   - Also add CLI entries for migrate and seed in production, or document `node dist/...`.
-2. **Docker.** Add a `Dockerfile` (multi-stage: install, then build web and API, then a slim runtime that serves the web dist via `WEB_DIST_DIR`) and a `docker-compose.yml` (app + postgres:17). Docker is **not installed on this machine**, so say in the docs that it is untested.
-3. **Remaining documents the brief requires:**
-   - `docs/ARCHITECTURE.md`
-   - `docs/DATABASE_SCHEMA.md`
-   - `docs/API.md`: every route is in `apps/api/src/modules/*/routes.ts` and the route mounting is in `src/app.ts`
-   - `docs/SECURITY_AND_PRIVACY.md`: controls are listed below under *Security implemented*
-   - `docs/USER_GUIDE.md`
-   - `docs/DESIGN_SYSTEM.md`: tokens are in `apps/web/src/styles/tokens.css`; chart palettes were validated, see *Decisions*
-   - `brand/README.md`: logo provenance
-4. **Web bundle size.** The main chunk is 531 kB (166 kB gzip), likely because zod comes in through `@familypulse/shared/schemas`. Option: give web its own entry that skips the schemas, add a `shared/client` export, or use `manualChunks` for react, d3 and query.
-5. **Polish backlog** (none blocking):
-   - On phones the dashboard Smart Tips sit below accounts; consider moving them above Goals.
-   - The seed's activity feed is dominated by "moved … to …" transfer events, all timestamped now. Consider backdating `created_at` or skipping activity for seeded transfers.
-   - Optional: add dark mode.
-6. **Final report to the user**, built from this log, `FEATURE_IMPLEMENTATION.md` and `README.md`.
+What remains, in priority order:
+
+1. **Push to GitHub so CI runs.** `.github/workflows/ci.yml` runs lint, types, tests (both DB drivers), E2E on four device profiles, and a Docker build with a smoke test. Treat the first green `docker` job as the verification of the Dockerfile. If it fails, fix it and record the fix here.
+2. **Product decision: future-dated entries.** Current balances and net worth include entries dated after "today", while the net-worth history up to today does not. Decide whether "current" should exclude them (show them as *scheduled*), then change the balance queries (`accounts/service.ts`, `finance/service.ts`) and the dashboard together.
+3. **Hardening, from SECURITY_AND_PRIVACY.md:** Postgres row-level security as defence in depth, email verification, optional 2FA, and a shared rate-limit store before running several instances.
+4. **Features recorded as future work** (FEATURE_IMPLEMENTATION.md ⏳): edit-approval workflow, email and push delivery, receipt OCR, PDF/Excel export, a bank aggregator behind `FinancialDataProvider`, multi-currency, dark mode.
+5. **Accessibility follow-up:** on narrow screens the dashboard is reordered with CSS `order` (tips before goals), so visual order differs from DOM and focus order for those cards. Consider restructuring the DOM if an audit flags it.
 
 Housekeeping the user should know about:
 - During screenshotting, a stray folder was created at `C:\c\Users\dangh\AppData\Local\Temp\claude\…\scratchpad\shots` (2 PNGs, caused by a Git Bash path conversion). Removing it was blocked by a safety check, so the user can delete `C:\c` manually.
 - `npm audit` reports moderate advisories only in dev/build tooling: drizzle-kit's bundled esbuild, and glob/minimatch via workbox-build. These are not shipped to the runtime.
+
+---
+
+## Session 2 — 2026-11-19 (evening)
+
+### Done
+| Item | Result |
+|---|---|
+| API production bundle | `tsup.config.ts` with entries `index`, `migrate` and `seed`; `npm start` migrates, then serves. Smoke-tested: the SPA, service worker and manifest are served; JSON 404s; login; security headers. The built app ran in Chromium under the production CSP with **no console errors**, and the service worker registered. |
+| Production-only install | A simulated Docker runtime stage (`npm ci --omit=dev --workspace=@familypulse/api`: 129 packages, 65 MB) booted and handled registration (native Argon2 + DB). |
+| Docker | Multi-stage `Dockerfile` (non-root user, healthcheck, migrate-then-start), `docker-compose.yml` (app + postgres:17), `.dockerignore`. **Not built here**; the CI `docker` job does it. |
+| Postgres driver verification | `npm run test:pg` runs the whole API suite through **node-postgres over the real wire protocol** (PGlite via `pglite-socket`, pool of 1). 80/80 pass. Raw `min(date)` aggregates were cast to `::text` for driver-independent typing. |
+| Docs | API, ARCHITECTURE, DATABASE_SCHEMA, SECURITY_AND_PRIVACY, DESIGN_SYSTEM, DEPLOYMENT, USER_GUIDE (+ the README update). |
+| Bundle | `@familypulse/shared/client` (no Zod in the browser) plus vendor chunks: app code 96 kB / 31 kB gzip (was one 531 kB chunk). |
+| Polish | On small screens the dashboard shows tips and bills before goals and accounts; seeded activity and comments are back-dated to their entries. |
+| CI | `.github/workflows/ci.yml`: checks, then E2E and Docker. |
+
+### Bugs found and fixed
+- **Household "today" was UTC.** After ~4 pm Pacific the server already treated it as tomorrow: budget month, "due in N days", alerts, forecast start, and date validation (east of UTC, today's date was rejected as "future"). Fixed with `households.timezone` (migration `0001`), auto-detected from the creator's browser and editable in Household → Settings, plus `householdToday(h)` / `todayInZone()`. The seed uses the machine's local zone.
+- **Zod 4 `.partial()` keeps `.default()`s** (confirmed with a probe). Partial PATCHes silently reset fields:
+  - renaming a household reset **currency → USD**;
+  - archiving or unarchiving a goal reset its **icon and planned monthly amount → 0**;
+  - pausing a bill reset **autopay → false**.
+
+  All update schemas are now written out explicitly, with regression tests in the shared and API suites.
+- **Orphaned dev servers on Windows.** Stopping a background shell left the child `node` processes running. They held the Argon2 `.node` file (blocking `npm ci`) and stale ports (one E2E failure). They are now cleaned up by command line (see CLAUDE.md).
+- **jest-dom matchers missing when tests run via `npm run -w`.** On Windows, a drive-letter casing difference loaded a second Vitest copy. The setup file now calls `expect.extend(matchers)` itself. *Correction:* commit `17615ac` blamed `sideEffects:false`; that was wrong, and `1bf2a92` records the real cause.
+- An aborted `npm install` left `node_modules` inconsistent (`npm ls` crashed). Recovered with `npm ci`.
+
+### Verification (end of session 2)
+| Suite | Result |
+|---|---|
+| `packages/shared` | 41 passed |
+| `apps/api` (PGlite driver) | 80 passed |
+| `apps/api` (`test:pg`, node-postgres driver) | 80 passed |
+| `apps/web` unit | 8 passed |
+| Playwright (desktop, iPhone 13, Pixel 7, iPad Mini) | 11 passed |
+| ESLint, `tsc` (all packages), web build, API build | clean / success |
+| Docker image | not built locally (CI job added) |
 
 ---
 

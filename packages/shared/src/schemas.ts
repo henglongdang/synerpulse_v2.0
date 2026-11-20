@@ -8,7 +8,7 @@ import {
   SCOPES,
   SUPPORTED_CURRENCIES,
 } from './constants';
-import { isValidISODate, isValidMonthKey } from './dates';
+import { isValidISODate, isValidMonthKey, isValidTimeZone } from './dates';
 import { MAX_ABS_CENTS } from './money';
 
 // ---------- primitives ----------
@@ -56,11 +56,20 @@ export const updateProfileSchema = z.object({ name: trimmed(1, 80, 'Name') });
 export const deleteAccountSchema = z.object({ password: z.string().min(1).max(128) });
 
 // ---------- households ----------
+export const zTimeZone = z.string().max(64).refine(isValidTimeZone, { message: 'Unknown time zone' });
 export const createHouseholdSchema = z.object({
   name: trimmed(1, 80, 'Household name'),
   currency: z.enum(SUPPORTED_CURRENCIES).default('USD'),
+  /** IANA zone; the web app sends the creator's browser zone. Drives the household's "today". */
+  timezone: zTimeZone.default('UTC'),
 });
-export const updateHouseholdSchema = createHouseholdSchema.partial();
+// Explicit (no defaults): in Zod 4, `.partial()` keeps defaults, so a rename-only PATCH would
+// silently reset currency/time zone.
+export const updateHouseholdSchema = z.object({
+  name: trimmed(1, 80, 'Household name').optional(),
+  currency: z.enum(SUPPORTED_CURRENCIES).optional(),
+  timezone: zTimeZone.optional(),
+});
 export const inviteSchema = z.object({
   email: zEmail.optional(),
   role: z.enum(['admin', 'contributor', 'viewer']),
@@ -197,7 +206,16 @@ export const createGoalSchema = z.object({
   icon: z.enum(['home', 'education', 'emergency', 'travel', 'car', 'retirement', 'other']).default('other'),
   plannedMonthlyCents: zNonNegativeCents.default(0),
 });
-export const updateGoalSchema = createGoalSchema.partial().extend({ archived: z.boolean().optional() });
+// Update schemas are written out explicitly: in Zod 4, `.partial()` keeps `.default()`s, so a
+// partial PATCH (e.g. archive) would silently reset defaulted fields such as icon or autopay.
+export const updateGoalSchema = z.object({
+  name: trimmed(1, 60, 'Goal name').optional(),
+  targetCents: zPositiveCents.optional(),
+  targetDate: zISODate.optional().nullable(),
+  icon: z.enum(['home', 'education', 'emergency', 'travel', 'car', 'retirement', 'other']).optional(),
+  plannedMonthlyCents: zNonNegativeCents.optional(),
+  archived: z.boolean().optional(),
+});
 export const goalContributionSchema = z.object({
   amountCents: zSignedCents.refine((v) => v !== 0, 'Amount cannot be zero'),
   date: zISODate,
@@ -224,7 +242,19 @@ export const createRecurringSchema = recurringBase
     message: 'Minimum cannot exceed the expected amount',
     path: ['minAmountCents'],
   });
-export const updateRecurringSchema = recurringBase.partial().extend({ active: z.boolean().optional() });
+export const updateRecurringSchema = z.object({
+  kind: z.enum(RECURRING_KINDS).optional(),
+  label: trimmed(1, 60, 'Label').optional(),
+  amountCents: zPositiveCents.optional(),
+  minAmountCents: zNonNegativeCents.optional().nullable(),
+  frequency: z.enum(FREQUENCIES).optional(),
+  nextDate: zISODate.optional(),
+  endDate: zISODate.optional().nullable(),
+  accountId: zId.optional().nullable(),
+  categoryId: zId.optional().nullable(),
+  autopay: z.boolean().optional(),
+  active: z.boolean().optional(),
+});
 export const markPaidSchema = z.object({
   date: zISODate.optional(),
   amountCents: zPositiveCents.optional(),

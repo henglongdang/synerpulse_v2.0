@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Lint, types, unit & integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      # Same API suite through the production node-postgres driver (wire protocol).
+      - run: npm run test:pg
+      - run: npm run build
+
+  e2e:
+    name: End-to-end (desktop, iPhone, Android, tablet)
+    runs-on: ubuntu-latest
+    needs: checks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/web
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-artifacts
+          path: apps/web/e2e/.artifacts
+          retention-days: 7
+
+  docker:
+    name: Docker image builds and serves
+    runs-on: ubuntu-latest
+    needs: checks
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t familypulse:ci .
+      - name: Smoke test (embedded database, health + SPA)
+        run: |
+          docker run -d --name fp -p 4000:4000 -e APP_ORIGIN=http://localhost:4000 -e COOKIE_SECURE=false familypulse:ci
+          for i in $(seq 1 40); do curl -sf http://localhost:4000/api/health && break; sleep 2; done
+          curl -sf http://localhost:4000/api/health
+          curl -sf http://localhost:4000/ | grep -q '<div id="root">'
+          docker logs fp | tail -20
