@@ -11,10 +11,10 @@ Full-stack implementation of the HCII 2025 paper *Revolutionizing Household Fina
   - Migrations live in `apps/api/drizzle/` (generate with `npm run db:generate -w @familypulse/api`)
 - `apps/web`: React 19 + Vite 7 + React Router 7 + TanStack Query. Hand-written CSS design system in `src/styles/`, D3-based charts in `src/components/charts.tsx`, PWA via vite-plugin-pwa.
 - `brand/`: logo vectorised from the prototype art. Do not redraw it; see `brand/README.md`.
-- `HCII 2025 International Paper/`: research source material. Read-only. The license form is git-ignored on purpose.
+- `HCII 2025 International Paper/`: research source material. Read-only. **The paper PDFs and the signed license form are git-ignored** (publisher copyright; the repo is public), so cite DOI 10.1007/978-3-032-13164-5_2. The slides and wireframes are committed.
 
 ## Commands (run from the repo root)
-- `npm run db:seed`, then `npm run dev` → API :4000 plus web :5173. Demo login: `mary@sample.familypulse.test` / `familypulse-demo`
+- `npm run dev`: blank install (DB `apps/api/data/pglite`). `npm run demo`: separate DB `apps/api/data/demo` with the fictional sample household (`mary@sample.familypulse.test` / `familypulse-demo`); `demo:reset` re-seeds it. Both serve API :4000 and web :5173 (`scripts/dev.mjs`).
 - Tests: `npm test` (shared + api + web unit), `npm run test:pg` (API suite through the production node-postgres driver), `npm run test:e2e` (Playwright starts its own isolated API :4100 and web :5174)
 - `npm run lint`, `npm run typecheck`, `npm run db:reset` (dev only)
 - Production: `npm run build`, then from `apps/api` run `npm start` (migrates, then serves the API + `WEB_DIST_DIR`). Docker: `docker compose up --build` (verified only by CI; see `docs/DEPLOYMENT.md`)

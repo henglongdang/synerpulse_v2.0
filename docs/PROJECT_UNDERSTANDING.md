@@ -13,6 +13,8 @@
 | Low-fidelity prototype | `low fi-1.png` | Five annotated wireframes with numbered interaction notes |
 | Publishing licence | `…License_to_Publish_Form.pdf` | Legal form. Not product material, and excluded from git |
 
+*The paper PDFs and the license form are kept local and are **not** in the public repository (publisher copyright). The paper is available at https://doi.org/10.1007/978-3-032-13164-5_2.*
+
 **There is no existing source code.** The "prototype" is a Figma design that was evaluated by usability testing; the paper notes that banking data was "simulated using mock datasets". Every behaviour in this repository is therefore new software that implements the prototype's design intent.
 
 ## 2. Research paper summary

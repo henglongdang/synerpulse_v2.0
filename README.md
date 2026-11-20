@@ -2,7 +2,11 @@
 
 A collaborative, forward-looking household finance app: one shared place for accounts, budgets, bills, goals and the conversation around every entry, plus a cash-flow planner for testing a decision before you make it.
 
-FamilyPulse is the software implementation of *Revolutionizing Household Finance: A User-Centered Platform for Holistic Financial Management* (Dang & Ding, HCI International 2025). The research materials are in `HCII 2025 International Paper/`, and the mapping from paper to software is in `docs/PROJECT_UNDERSTANDING.md`.
+FamilyPulse is the software implementation of the paper:
+
+> Dang, H., Ding, F. *Revolutionizing Household Finance: A User-Centered Platform for Holistic Financial Management.* HCI International 2025, Springer. https://doi.org/10.1007/978-3-032-13164-5_2
+
+The conference slides and the original Figma wireframes are in `HCII 2025 International Paper/`. The paper itself is not redistributed here; please use the DOI. The mapping from paper to software is in `docs/PROJECT_UNDERSTANDING.md`.
 
 > **Status:** feature-complete v2.0 with a verified production build. The Docker image is built and tested by CI (not locally). It is not deployed anywhere. See `docs/DEVELOPMENT_LOG.md`.
 
@@ -16,12 +20,21 @@ FamilyPulse is the software implementation of *Revolutionizing Household Finance
 Prerequisite: Node.js 20.19 or newer (developed on Node 26).
 
 ```bash
+git clone https://github.com/henglongdang/familypulse_v2.0.git
+cd familypulse_v2.0
 npm install
-npm run db:seed        # creates the embedded database and a FICTIONAL sample household
-npm run dev            # API on http://localhost:4000, web on http://localhost:5173
 ```
 
-Open http://localhost:5173 and sign in with the sample data (fictional names and figures):
+Then choose one of two modes. Each has its **own database**, so they never mix:
+
+| Command | What you get |
+|---|---|
+| `npm run dev` | **Blank install** for real use. Open http://localhost:5173, create an account, and set up your household. |
+| `npm run demo` | **Demo with sample data**: a fictional household with six months of history, ready to explore. `npm run demo:reset` restores it to the original sample. |
+
+Both start the API on http://localhost:4000 and the web app on http://localhost:5173. Nothing else needs installing; the database is embedded.
+
+Demo sign-ins (fictional names and figures):
 
 | Role | Email | Password |
 |---|---|---|
@@ -30,12 +43,13 @@ Open http://localhost:5173 and sign in with the sample data (fictional names and
 | Contributor (Groceries & Dining out only) | luna@sample.familypulse.test | familypulse-demo |
 | Viewer | liam@sample.familypulse.test | familypulse-demo |
 
-Or register a new account to go through onboarding. In development, password-reset and invitation emails are printed to the API console.
+In development, password-reset and invitation emails are printed to the API console instead of being sent.
 
 ## Scripts (from the repo root)
 | Command | What it does |
 |---|---|
-| `npm run dev` | API (watch) + web dev server |
+| `npm run dev` / `npm run demo` | Blank install / demo with the sample household (separate databases) |
+| `npm run demo:reset` | Restore the demo database to the original sample |
 | `npm run db:migrate` / `db:seed` / `db:reset` | Apply migrations, load sample data, wipe the dev database |
 | `npm test` | Shared, API and web unit/integration tests |
 | `npm run test:pg` | API suite through the production node-postgres driver (no Postgres install needed) |

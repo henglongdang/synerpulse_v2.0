@@ -29,8 +29,9 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 
-# Signed publishing agreement (personal information; keep local, do not publish)
-HCII 2025 International Paper/ID_5200_HenglongDang_and_FangDing_License_to_Publish_Form.pdf
+# Research PDFs stay local: signed publishing agreement (personal information) and the published
+# paper itself (publisher copyright). Cite https://doi.org/10.1007/978-3-032-13164-5_2 instead.
+HCII 2025 International Paper/*.pdf
 
 # Local scratch scripts
 *-tmp.mjs

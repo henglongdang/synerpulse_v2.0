@@ -13,7 +13,10 @@
     "node": ">=20.19"
   },
   "scripts": {
-    "dev": "concurrently -n api,web -c green,blue \"npm:dev -w @familypulse/api\" \"npm:dev -w @familypulse/web\"",
+    "dev": "node scripts/dev.mjs blank",
+    "demo": "node scripts/dev.mjs demo",
+    "demo:reset": "node scripts/dev.mjs demo-reset",
+    "dev:servers": "concurrently -n api,web -c green,blue \"npm:dev -w @familypulse/api\" \"npm:dev -w @familypulse/web\"",
     "dev:api": "npm run dev -w @familypulse/api",
     "dev:web": "npm run dev -w @familypulse/web",
     "db:migrate": "npm run db:migrate -w @familypulse/api",
