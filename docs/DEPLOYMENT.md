@@ -24,9 +24,11 @@ Preconfigured settings:
 - `TRUST_PROXY=true`, so client IPs are correct for rate limiting behind Render's proxy.
 - `EMAIL_TRANSPORT=console`: until you add SMTP (`EMAIL_TRANSPORT=smtp`, `SMTP_URL`), password-reset and invitation emails appear in the service log, not in inboxes. Invitations still work, because the inviter copies the link from the app.
 
+**Memory.** Measured in this configuration (production bundle, PostgreSQL attached, demo seeding plus repeated 2-year forecasts), the app peaks at about **200 MB** and settles around 120 MB, comfortably inside the free plan's 512 MB. Without `DATABASE_URL` it falls back to the *embedded* database inside the same process: about **390 MB** peak, nearly 300 MB at rest, which exceeds 512 MB under real use. If Render reports *"Ran out of memory (used over 512MB)"*, the service almost certainly has no database attached. Deploy through the Blueprint (which creates and wires PostgreSQL), or add `DATABASE_URL` from any Postgres provider. The server also logs a warning at startup when this happens.
+
 **Free-tier caveats** (check Render's current terms):
 - Free web services **sleep when idle**; the first visit afterwards takes a little while.
-- Free PostgreSQL databases are **time-limited**; upgrade the database plan to keep data.
+- Free PostgreSQL databases are **time-limited**; upgrade the database plan to keep data, or point `DATABASE_URL` at an external Postgres with a lasting free tier (for example Neon or Supabase; use their connection string with `sslmode=require`).
 - The free plan has **no persistent disk**, so uploaded receipts are lost on redeploy or restart. Use a paid plan with a disk (`UPLOAD_DIR`) or add S3 storage before relying on receipts.
 
 To turn the demo off, set `DEMO_MODE=false` (the sample household stays until deleted).

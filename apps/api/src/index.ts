@@ -14,6 +14,11 @@ async function main() {
       `FamilyPulse API listening on :${config.port} (${config.env}${config.demoMode ? ', public demo on' : ''}) · database: ${database.driver}${database.driver === 'pglite' ? ` (${config.pgliteDir})` : ''} · email: ${deps().email.transport}${config.webDistDir ? ` · serving web app from ${config.webDistDir}` : ''}`,
     );
   });
+  if (config.isProd && database.driver === 'pglite') {
+    logger.warn(
+      'DATABASE_URL is not set: running the EMBEDDED database inside this process. Fine for a quick trial, but it needs ~300-400 MB of extra RAM and data lives on the instance disk. Attach PostgreSQL (DATABASE_URL) for real use — see docs/DEPLOYMENT.md.',
+    );
+  }
   const stopScheduler = startAlertScheduler();
   const stopDemo = startDemoScheduler();
   const purge = setInterval(() => void purgeExpiredSessions().catch(() => undefined), 6 * 3_600_000);

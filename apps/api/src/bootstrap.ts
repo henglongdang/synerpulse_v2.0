@@ -6,7 +6,7 @@ import { createDiskStorage, type StorageService } from './services/storage';
 
 export async function bootstrap(overrides: { config?: Config; email?: EmailService; storage?: StorageService } = {}): Promise<{ database: Database; config: Config }> {
   const config = overrides.config ?? loadConfig();
-  const database = await openDatabase({ databaseUrl: config.databaseUrl, pgliteDir: config.pgliteDir });
+  const database = await openDatabase({ databaseUrl: config.databaseUrl, pgliteDir: config.pgliteDir, poolMax: config.dbPoolMax });
   await database.migrate();
   const email =
     overrides.email ??

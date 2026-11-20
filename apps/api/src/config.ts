@@ -14,6 +14,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string().optional(),
   /** Directory for the embedded PGlite database, or "memory://" for an ephemeral one. */
   PGLITE_DIR: z.string().default('./data/pglite'),
+  /** Max PostgreSQL connections per process (keep small on low-memory hosts). */
+  DB_POOL_MAX: z.coerce.number().int().min(1).max(50).default(5),
   /** Public origin of the web app (CSRF origin check, links in emails). Defaults to the URL Render assigns (RENDER_EXTERNAL_URL), then to the local dev server. */
   APP_ORIGIN: z.string().url().optional(),
   RENDER_EXTERNAL_URL: z.string().url().optional(),
@@ -56,6 +58,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     port: e.PORT,
     databaseUrl: e.DATABASE_URL,
     pgliteDir: e.PGLITE_DIR,
+    dbPoolMax: e.DB_POOL_MAX,
     appOrigin: (e.APP_ORIGIN ?? e.RENDER_EXTERNAL_URL ?? 'http://localhost:5173').replace(/\/$/, ''),
     sessionTtlMs: e.SESSION_TTL_DAYS * 86_400_000,
     cookieSecure: e.COOKIE_SECURE ?? isProd,

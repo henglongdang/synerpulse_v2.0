@@ -17,6 +17,11 @@ services:
       # Render terminates TLS in front of the app; APP_ORIGIN defaults to RENDER_EXTERNAL_URL.
       - key: TRUST_PROXY
         value: 'true'
+      # Fit comfortably in the free plan's 512 MB: measured peak ~200 MB with PostgreSQL attached.
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=320
+      - key: DB_POOL_MAX
+        value: '3'
       # Public demo: fictional sample household, demo accounts locked, auto-reset when older than 24 h.
       - key: DEMO_MODE
         value: 'true'
