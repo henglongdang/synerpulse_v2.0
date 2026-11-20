@@ -8,7 +8,17 @@ FamilyPulse is the software implementation of the paper:
 
 The conference slides and the original Figma wireframes are in `HCII 2025 International Paper/`. The paper itself is not redistributed here; please use the DOI. The mapping from paper to software is in `docs/PROJECT_UNDERSTANDING.md`.
 
-> **Status:** feature-complete v2.0 with a verified production build. The Docker image is built and tested by CI (not locally). It is not deployed anywhere. See `docs/DEVELOPMENT_LOG.md`.
+> **Status:** feature-complete v2.0. CI builds and tests everything, including the Docker image, on every push.
+
+## Put it online (public website)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/henglongdang/familypulse_v2.0)
+
+The button creates the web app and a PostgreSQL database on [Render](https://render.com) from `render.yaml`. You sign in with GitHub and confirm. The site then offers both:
+- **Create your own account**: a fresh, blank household for real use.
+- **Explore the demo household**: one click into a fictional family's finances. Demo accounts can't change passwords, delete things or invite people, and the demo resets daily, so visitors can't spoil it for each other.
+
+See `docs/DEPLOYMENT.md` for free-tier limits, email setup and a custom domain.
 
 ## Tech stack
 - **Web:** React 19, Vite 7, React Router 7, TanStack Query, D3 (scales and shapes), hand-built CSS design system, PWA (Workbox)

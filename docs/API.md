@@ -8,7 +8,7 @@ Base path `/api`. JSON in and out. All money values are **integer cents**. Perce
 |---|---|
 | Authentication | Session cookie (`fp_session`, or `__Host-fp_session` when secure). It is set by register and login, httpOnly, SameSite=Lax, and the expiry slides forward hourly (30 days by default). |
 | CSRF | Every non-GET request must send `X-Requested-With: familypulse`. If an `Origin` header is present it must match `APP_ORIGIN` or the request host. Otherwise the response is `403 csrf`. |
-| Errors | `{ "error": { "code", "message", "details?": { field: [messages] }, "current?" } }`. Codes include `bad_request` (400), `invalid_credentials`/`unauthorized` (401), `forbidden`/`csrf` (403), `not_found` (404), `conflict` (409), `invitation_unavailable` (410), `payload_too_large` (413), `rate_limited` (429), `internal` (500, never with internals). |
+| Errors | `{ "error": { "code", "message", "details?": { field: [messages] }, "current?" } }`. Codes include `bad_request` (400), `invalid_credentials`/`unauthorized` (401), `forbidden`/`csrf`/`demo_locked` (403), `not_found` (404), `conflict` (409), `invitation_unavailable` (410), `payload_too_large` (413), `rate_limited` (429), `internal` (500, never with internals). |
 | Household isolation | Household routes are `/api/households/:householdId/...`. Non-members get **404** for the household and everything in it, and foreign ids anywhere also return 404. |
 | Capabilities | Role checks use the matrix in `packages/shared/src/permissions.ts`. Below, **cap** = the required capability: viewer < contributor < admin < owner. "Private" means the caller must own the private account involved. |
 | Concurrency | Transaction edits require `expectedVersion`. A mismatch returns 409 with `current` (the server copy). |
@@ -39,6 +39,7 @@ Base path `/api`. JSON in and out. All money values are **integer cents**. Perce
 | POST `/notifications/:id/read` · POST `/notifications/read-all` · DELETE `/notifications/:id` | ✔ | Manage the inbox. |
 | GET `/integrations` | ✔ | Data-source status (manual, CSV, aggregator not configured). |
 | GET `/health` | – | `{ ok: true }` |
+| GET `/demo` | – | `{ enabled:false }`, or with `DEMO_MODE` on: the public demo login and its reset interval |
 
 ## Households, members, invitations
 

@@ -26,6 +26,7 @@ The assets are household financial records, personal notes and receipts, and use
 | Caching | API responses `Cache-Control: no-store`; the service worker caches the **app shell only**, never API data | `app.ts`, `vite.config.ts` | `auth.test` |
 | Offline data | IndexedDB holds only entries typed while offline, until they sync; cleared on sign-out and account deletion | `web/lib/outbox.ts` | e2e `offline` |
 | Logging | Method, path (IDs masked), status and duration only; bodies and query strings never logged; redaction of cookies, auth, password, token and email keys | `app.ts`, `lib/logger.ts` | review |
+| Public demo | Shared demo accounts (`*@sample.familypulse.test`, fictional data) cannot change password, profile or sessions, delete the account or household, manage members, invite, create or join households, or receive reset emails. The demo household is wiped and re-seeded when it is older than `DEMO_RESET_HOURS`. | `lib/http.ts › forbidDemo`, `modules/demo` | `demo.test` |
 | Errors | Unknown errors return a generic 500; stack traces and SQL stay server-side | `lib/errors.ts` | `auth.test` |
 | Secrets | Configuration comes from environment variables only (`.env.example` contains no secrets); nothing secret is shipped to the browser | `config.ts` | review |
 

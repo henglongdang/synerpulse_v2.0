@@ -21,6 +21,7 @@ import { activityRouter, notificationsRouter } from './modules/activity/routes';
 import { importsRouter } from './modules/imports/routes';
 import { privacyRouter } from './modules/privacy/routes';
 import { providerStatuses } from './services/providers';
+import { DEMO_EMAIL_DOMAIN, DEMO_PASSWORD } from '@familypulse/shared';
 
 export function createApp() {
   const { config } = deps();
@@ -75,6 +76,10 @@ export function createApp() {
 
   api.get('/health', (_req, res) => res.json({ ok: true }));
   api.get('/integrations', requireAuth, (_req, res) => res.json({ providers: providerStatuses() }));
+  // Public demo availability (the demo credentials are intentionally public, and only these are exposed).
+  api.get('/demo', (_req, res) =>
+    res.json(config.demoMode ? { enabled: true, email: `mary@${DEMO_EMAIL_DOMAIN}`, password: DEMO_PASSWORD, resetHours: config.demoResetHours } : { enabled: false }),
+  );
   api.use('/auth', authRouter);
   api.use('/me', privacyRouter);
   api.use('/notifications', notificationsRouter);

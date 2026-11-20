@@ -4,6 +4,7 @@ import {
   changePasswordSchema,
   DEFAULT_NOTIFICATION_PREFS,
   forgotPasswordSchema,
+  isDemoEmail,
   loginSchema,
   notificationPrefsSchema,
   registerSchema,
@@ -16,7 +17,7 @@ import {
 import { db, deps } from '../../lib/deps';
 import { burnPasswordCheck, hashPassword, hashToken, newId, newToken, verifyPassword } from '../../lib/crypto';
 import { AppError, conflict, notFound, parse, unauthorized } from '../../lib/errors';
-import { currentUser, idParam, requireAuth } from '../../lib/http';
+import { currentUser, forbidDemo, idParam, requireAuth } from '../../lib/http';
 import { loginLimiter, passwordResetLimiter, registerLimiter } from '../../lib/rateLimit';
 import { notifications, passwordResetTokens, sessions, users } from '../../db/schema';
 import { clearSessionCookie, createSession } from './session';
@@ -97,7 +98,7 @@ authRouter.get('/session', async (req, res) => {
   res.json({ me: req.user ? await buildMe(req.user.id) : null });
 });
 
-authRouter.patch('/me', requireAuth, async (req, res) => {
+authRouter.patch('/me', requireAuth, forbidDemo, async (req, res) => {
   const input = parse(updateProfileSchema, req.body);
   const user = currentUser(req);
   await db().update(users).set({ name: input.name, updatedAt: new Date() }).where(eq(users.id, user.id));
@@ -119,7 +120,7 @@ authRouter.post('/me/last-household', requireAuth, async (req, res) => {
   res.status(204).end();
 });
 
-authRouter.post('/password/change', requireAuth, async (req, res) => {
+authRouter.post('/password/change', requireAuth, forbidDemo, async (req, res) => {
   const input = parse(changePasswordSchema, req.body);
   const user = currentUser(req);
   const [row] = await db().select().from(users).where(eq(users.id, user.id));
@@ -146,7 +147,8 @@ authRouter.post('/password/forgot', passwordResetLimiter, async (req, res) => {
     .from(users)
     .where(sql`lower(${users.email}) = ${input.email}`)
     .limit(1);
-  if (user) {
+  // Demo accounts are shared and never get reset links.
+  if (user && !isDemoEmail(user.email)) {
     const token = newToken();
     await db()
       .insert(passwordResetTokens)
@@ -204,7 +206,7 @@ authRouter.get('/sessions', requireAuth, async (req, res) => {
   res.json({ sessions: out });
 });
 
-authRouter.delete('/sessions/:sessionId', requireAuth, async (req, res) => {
+authRouter.delete('/sessions/:sessionId', requireAuth, forbidDemo, async (req, res) => {
   const sessionId = idParam(req, 'sessionId', 'Session');
   const result = await db()
     .delete(sessions)

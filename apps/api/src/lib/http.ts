@@ -1,6 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { and, eq } from 'drizzle-orm';
-import { can, todayInZone, type Capability, type Role } from '@familypulse/shared';
+import { can, isDemoEmail, todayInZone, type Capability, type Role } from '@familypulse/shared';
 import { db, deps } from './deps';
 import { AppError, forbidden, notFound, unauthorized } from './errors';
 import { householdMembers, households, memberCategoryScopes } from '../db/schema';
@@ -86,6 +86,18 @@ export async function loadHousehold(req: Request, _res: Response, next: NextFunc
 export function householdToday(h: Pick<HouseholdCtx, 'timezone'>): string {
   return todayInZone(h.timezone);
 }
+
+/**
+ * The shared demo accounts are used by many visitors at once. Account- and household-level changes
+ * (passwords, deleting, membership, invitations) are refused so nobody can lock others out; the
+ * financial data inside the demo stays fully editable and is reset on a schedule.
+ */
+export const forbidDemo: RequestHandler = (req, _res, next) => {
+  if (req.user && isDemoEmail(req.user.email)) {
+    return next(new AppError(403, 'demo_locked', 'This is the shared demo account, so this setting is locked. Create your own free account to use it.'));
+  }
+  next();
+};
 
 export function requireCap(capability: Capability): RequestHandler {
   return (req, _res, next) => {

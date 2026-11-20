@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
-import { useQueryClient } from '@tanstack/react-query';
-import { CalendarClock, MessagesSquare, PanelsTopLeft } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { CalendarClock, Compass, MessagesSquare, PanelsTopLeft } from 'lucide-react';
 import { api, ApiError } from '../../lib/api';
 import { meKey } from '../../lib/session';
 import { Button, Field, FormError, Input } from '../../components/ui';
@@ -58,6 +58,56 @@ function useAfterAuth() {
   };
 }
 
+interface DemoInfo {
+  enabled: boolean;
+  email?: string;
+  password?: string;
+  resetHours?: number;
+}
+
+/** Public deployments run a shared, fictional demo household; this offers a one-click way in. */
+function DemoCard() {
+  const after = useAfterAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+  const demo = useQuery({ queryKey: ['demo-info'], queryFn: () => api.get<DemoInfo>('/demo'), staleTime: Infinity, retry: false });
+  if (!demo.data?.enabled) return null;
+  return (
+    <div className="demo-card">
+      <div className="cluster" style={{ gap: 8, flexWrap: 'nowrap', alignItems: 'flex-start' }}>
+        <Compass size={18} style={{ flex: 'none', marginTop: 2, color: 'var(--forest-700)' }} aria-hidden />
+        <div>
+          <strong>Just looking?</strong>
+          <div className="small muted">
+            Explore a fictional family’s finances: budgets, a shared ledger and the planner. It’s shared with other visitors and resets every{' '}
+            {demo.data.resetHours && demo.data.resetHours !== 24 ? `${demo.data.resetHours} hours` : 'day'}.
+          </div>
+        </div>
+      </div>
+      <FormError error={error} />
+      <Button
+        variant="accent"
+        block
+        loading={loading}
+        onClick={async () => {
+          setLoading(true);
+          setError(null);
+          try {
+            await api.post('/auth/login', { email: demo.data!.email, password: demo.data!.password });
+            await after();
+          } catch (e) {
+            setError(e);
+          } finally {
+            setLoading(false);
+          }
+        }}
+      >
+        Explore the demo household
+      </Button>
+    </div>
+  );
+}
+
 export function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -109,6 +159,7 @@ export function LoginPage() {
             Create an account
           </Link>
         </p>
+        {!from && <DemoCard />}
       </form>
     </AuthLayout>
   );

@@ -620,3 +620,13 @@
   .dash-accounts { order: 6; }
   .dash-activity { order: 7; }
 }
+
+/* Public demo entry on the sign-in page */
+.demo-card {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 1px dashed var(--forest-700);
+  border-radius: var(--r-lg);
+  background: var(--bg-header);
+}

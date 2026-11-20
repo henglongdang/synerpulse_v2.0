@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle2, CircleSlash, Download, Laptop, LogOut, Smartphone } from 'lucide-react';
-import type { NotificationPrefs, SessionDTO } from '@familypulse/shared/client';
+import { isDemoEmail, type NotificationPrefs, type SessionDTO } from '@familypulse/shared/client';
 import { api, ApiError } from '../../lib/api';
 import { meKey, signOut, useHousehold } from '../../lib/session';
 import { useToast } from '../../lib/toast';
@@ -12,6 +12,7 @@ import { clearOutbox } from '../../lib/outbox';
 
 export default function SettingsPage() {
   const location = useLocation();
+  const { me } = useHousehold();
   useEffect(() => {
     if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView({ block: 'start' });
   }, [location.hash]);
@@ -23,6 +24,12 @@ export default function SettingsPage() {
           <p>Your profile, security, alerts and data.</p>
         </div>
       </div>
+      {isDemoEmail(me.user.email) && (
+        <div className="callout warn" style={{ marginBottom: 20 }}>
+          You’re using the shared demo account. Profile, password, devices and account deletion are locked so visitors can’t lock each other out. Create your own
+          free account to use them.
+        </div>
+      )}
       <div className="settings-grid">
         <Profile />
         <Password />

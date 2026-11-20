@@ -17,7 +17,7 @@ import { accounts, householdMembers, households, invitations, users } from '../.
 import { db, deps } from '../../lib/deps';
 import { hashToken, newId, newToken } from '../../lib/crypto';
 import { AppError, badRequest, conflict, forbidden, notFound, parse } from '../../lib/errors';
-import { currentHousehold, currentUser, idParam, requireAuth, requireCap } from '../../lib/http';
+import { currentHousehold, currentUser, forbidDemo, idParam, requireAuth, requireCap } from '../../lib/http';
 import { logActivity } from '../../lib/activity';
 import { createHousehold, getMemberRole, listMembers, setCategoryScope } from './service';
 import { notify } from '../notifications/service';
@@ -29,7 +29,7 @@ export const householdsRootRouter = Router();
 /** Routes mounted under /api/households/:householdId (membership already verified). */
 export const householdRouter = Router({ mergeParams: true });
 
-householdsRootRouter.post('/households', requireAuth, async (req, res) => {
+householdsRootRouter.post('/households', requireAuth, forbidDemo, async (req, res) => {
   const input = parse(createHouseholdSchema, req.body);
   const user = currentUser(req);
   const id = await db().transaction((tx) => createHousehold(tx, { name: input.name, currency: input.currency, timezone: input.timezone, ownerId: user.id }));
@@ -76,7 +76,7 @@ householdsRootRouter.get('/invitations/:token', async (req, res) => {
   });
 });
 
-householdsRootRouter.post('/invitations/:token/accept', requireAuth, async (req, res) => {
+householdsRootRouter.post('/invitations/:token/accept', requireAuth, forbidDemo, async (req, res) => {
   const user = currentUser(req);
   const inv = await findInvite(String(req.params.token));
   if (!inv) throw notFound('Invitation');
@@ -131,7 +131,7 @@ householdRouter.get('/', async (req, res) => {
   res.json({ household: h, members: await listMembers(h.id) });
 });
 
-householdRouter.patch('/', requireCap('household.update'), async (req, res) => {
+householdRouter.patch('/', forbidDemo, requireCap('household.update'), async (req, res) => {
   const h = currentHousehold(req);
   const input = parse(updateHouseholdSchema, req.body);
   await db()
@@ -155,7 +155,7 @@ householdRouter.post('/onboarded', requireCap('household.update'), async (req, r
   res.status(204).end();
 });
 
-householdRouter.delete('/', requireCap('household.delete'), async (req, res) => {
+householdRouter.delete('/', forbidDemo, requireCap('household.delete'), async (req, res) => {
   const h = currentHousehold(req);
   const confirm = parse(z.object({ confirmName: z.string() }), req.body);
   if (confirm.confirmName.trim() !== h.name) throw badRequest('Type the household name exactly to confirm deletion');
@@ -171,7 +171,7 @@ householdRouter.get('/members', async (req, res) => {
   res.json({ members: await listMembers(currentHousehold(req).id) });
 });
 
-householdRouter.patch('/members/:userId', requireCap('members.manage'), async (req, res) => {
+householdRouter.patch('/members/:userId', forbidDemo, requireCap('members.manage'), async (req, res) => {
   const h = currentHousehold(req);
   const actor = currentUser(req);
   const targetId = idParam(req, 'userId', 'Member');
@@ -227,7 +227,7 @@ householdRouter.patch('/members/:userId', requireCap('members.manage'), async (r
 });
 
 /** Remove a member, or leave the household when targeting yourself. */
-householdRouter.delete('/members/:userId', async (req, res) => {
+householdRouter.delete('/members/:userId', forbidDemo, async (req, res) => {
   const h = currentHousehold(req);
   const actor = currentUser(req);
   const targetId = idParam(req, 'userId', 'Member');
@@ -268,7 +268,7 @@ householdRouter.delete('/members/:userId', async (req, res) => {
   res.status(204).end();
 });
 
-householdRouter.post('/transfer-ownership', requireCap('household.transferOwnership'), async (req, res) => {
+householdRouter.post('/transfer-ownership', forbidDemo, requireCap('household.transferOwnership'), async (req, res) => {
   const h = currentHousehold(req);
   const actor = currentUser(req);
   const { userId } = parse(transferOwnershipSchema, req.body);
@@ -340,7 +340,7 @@ householdRouter.get('/invitations', requireCap('members.manage'), async (req, re
   res.json({ invitations: out });
 });
 
-householdRouter.post('/invitations', requireCap('members.manage'), async (req, res) => {
+householdRouter.post('/invitations', forbidDemo, requireCap('members.manage'), async (req, res) => {
   const h = currentHousehold(req);
   const actor = currentUser(req);
   const input = parse(inviteSchema, req.body);

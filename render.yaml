@@ -1,0 +1,34 @@
+# Render Blueprint — one-click deploy of FamilyPulse (web app + API) with PostgreSQL.
+# Use the "Deploy to Render" button in README.md, or Render dashboard → New → Blueprint → this repo.
+# Free plans have limits (idle services sleep; free databases expire) — see docs/DEPLOYMENT.md.
+services:
+  - type: web
+    name: familypulse
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: familypulse-db
+          property: connectionString
+      # Render terminates TLS in front of the app; APP_ORIGIN defaults to RENDER_EXTERNAL_URL.
+      - key: TRUST_PROXY
+        value: 'true'
+      # Public demo: fictional sample household, demo accounts locked, auto-reset when older than 24 h.
+      - key: DEMO_MODE
+        value: 'true'
+      - key: DEMO_RESET_HOURS
+        value: '24'
+      # No email provider configured yet: reset/invite emails are written to the service log.
+      # Set EMAIL_TRANSPORT=smtp and SMTP_URL in the dashboard to send real email.
+      - key: EMAIL_TRANSPORT
+        value: console
+
+databases:
+  - name: familypulse-db
+    plan: free
+    databaseName: familypulse
+    user: familypulse

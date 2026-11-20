@@ -17,7 +17,7 @@ import {
   Settings,
   Users,
 } from 'lucide-react';
-import { ROLE_LABELS } from '@familypulse/shared/client';
+import { isDemoEmail, ROLE_LABELS } from '@familypulse/shared/client';
 import { signOut, useHousehold } from '../lib/session';
 import { flushOutbox, useOnline, useOutbox } from '../lib/outbox';
 import { useToast } from '../lib/toast';
@@ -169,6 +169,7 @@ function HouseholdSwitcher() {
 
 function Shell() {
   const { me, household, can, hid } = useHousehold();
+  const qc = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
   const online = useOnline();
@@ -223,7 +224,22 @@ function Shell() {
       <div className="main">
         {household.isSample && (
           <div className="sample-bar" role="note">
-            Sample household — all names and figures are fictional demo data.
+            {isDemoEmail(me.user.email) ? (
+              <>
+                Shared demo with fictional data, reset daily.{' '}
+                <button
+                  className="link-btn"
+                  onClick={async () => {
+                    await signOut(qc);
+                    navigate('/register');
+                  }}
+                >
+                  Create your own account
+                </button>
+              </>
+            ) : (
+              'Sample household — all names and figures are fictional demo data.'
+            )}
           </div>
         )}
         {!online && (

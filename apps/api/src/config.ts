@@ -14,8 +14,9 @@ const envSchema = z.object({
   DATABASE_URL: z.string().optional(),
   /** Directory for the embedded PGlite database, or "memory://" for an ephemeral one. */
   PGLITE_DIR: z.string().default('./data/pglite'),
-  /** Public origin of the web app, used for CSRF origin checks and links in emails. */
-  APP_ORIGIN: z.string().url().default('http://localhost:5173'),
+  /** Public origin of the web app (CSRF origin check, links in emails). Defaults to the URL Render assigns (RENDER_EXTERNAL_URL), then to the local dev server. */
+  APP_ORIGIN: z.string().url().optional(),
+  RENDER_EXTERNAL_URL: z.string().url().optional(),
   SESSION_TTL_DAYS: z.coerce.number().int().min(1).max(90).default(30),
   COOKIE_SECURE: bool,
   TRUST_PROXY: bool,
@@ -30,6 +31,9 @@ const envSchema = z.object({
   RATE_LIMIT_ENABLED: bool,
   /** Background alert sweep interval (minutes). 0 disables the scheduler. */
   ALERT_SWEEP_MINUTES: z.coerce.number().int().min(0).max(1440).default(60),
+  /** Public demo: load the fictional sample household at startup, lock its accounts, reset it on a schedule. */
+  DEMO_MODE: bool,
+  DEMO_RESET_HOURS: z.coerce.number().min(0).max(720).default(24),
 });
 
 export type Config = ReturnType<typeof loadConfig>;
@@ -52,7 +56,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     port: e.PORT,
     databaseUrl: e.DATABASE_URL,
     pgliteDir: e.PGLITE_DIR,
-    appOrigin: e.APP_ORIGIN.replace(/\/$/, ''),
+    appOrigin: (e.APP_ORIGIN ?? e.RENDER_EXTERNAL_URL ?? 'http://localhost:5173').replace(/\/$/, ''),
     sessionTtlMs: e.SESSION_TTL_DAYS * 86_400_000,
     cookieSecure: e.COOKIE_SECURE ?? isProd,
     trustProxy: e.TRUST_PROXY ?? false,
@@ -65,5 +69,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     emailFrom: e.EMAIL_FROM,
     rateLimitEnabled: e.RATE_LIMIT_ENABLED ?? e.NODE_ENV !== 'test',
     alertSweepMinutes: e.NODE_ENV === 'test' ? 0 : e.ALERT_SWEEP_MINUTES,
+    demoMode: e.DEMO_MODE ?? false,
+    demoResetHours: e.DEMO_RESET_HOURS,
   };
 }

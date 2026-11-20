@@ -4,7 +4,7 @@
  * All amounts are generated from a seeded PRNG relative to today's date; no real data is used.
  */
 import { and, eq, sql } from 'drizzle-orm';
-import { addDays, addMonths, monthKey, startOfMonth, todayInZone, type ISODate } from '@familypulse/shared';
+import { addDays, addMonths, DEMO_EMAIL_DOMAIN, DEMO_PASSWORD, monthKey, startOfMonth, todayInZone, type ISODate } from '@familypulse/shared';
 
 /** The sample household lives in the machine's local time zone, so "today" matches the developer's clock. */
 export const SAMPLE_TIMEZONE = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
@@ -32,12 +32,12 @@ import { createTransaction, createTransfer, updateTransaction } from '../modules
 import { stepAfter } from '../modules/finance/recurrence';
 import type { AuthUser, HouseholdCtx } from '../lib/http';
 
-export const SAMPLE_PASSWORD = 'familypulse-demo';
+export const SAMPLE_PASSWORD = DEMO_PASSWORD;
 export const SAMPLE_USERS = [
-  { key: 'mary', name: 'Mary Okafor', email: 'mary@sample.familypulse.test', role: 'owner' },
-  { key: 'power', name: 'Power Lin', email: 'power@sample.familypulse.test', role: 'admin' },
-  { key: 'luna', name: 'Luna Okafor-Lin', email: 'luna@sample.familypulse.test', role: 'contributor' },
-  { key: 'liam', name: 'Liam Okafor-Lin', email: 'liam@sample.familypulse.test', role: 'viewer' },
+  { key: 'mary', name: 'Mary Okafor', email: `mary@${DEMO_EMAIL_DOMAIN}`, role: 'owner' },
+  { key: 'power', name: 'Power Lin', email: `power@${DEMO_EMAIL_DOMAIN}`, role: 'admin' },
+  { key: 'luna', name: 'Luna Okafor-Lin', email: `luna@${DEMO_EMAIL_DOMAIN}`, role: 'contributor' },
+  { key: 'liam', name: 'Liam Okafor-Lin', email: `liam@${DEMO_EMAIL_DOMAIN}`, role: 'viewer' },
 ] as const;
 
 function prng(seed: number) {

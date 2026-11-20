@@ -27,7 +27,7 @@ import {
 import { db } from '../../lib/deps';
 import { verifyPassword } from '../../lib/crypto';
 import { AppError, conflict, parse } from '../../lib/errors';
-import { currentUser, requireAuth } from '../../lib/http';
+import { currentUser, forbidDemo, requireAuth } from '../../lib/http';
 import { clearSessionCookie } from '../auth/session';
 import { accountVisibility } from '../accounts/service';
 
@@ -113,7 +113,7 @@ privacyRouter.get('/export', async (req, res) => {
  * that has other members requires transferring ownership first. In shared households, the user's
  * private accounts are deleted and their shared accounts are handed to the household owner.
  */
-privacyRouter.delete('/', async (req, res) => {
+privacyRouter.delete('/', forbidDemo, async (req, res) => {
   const user = currentUser(req);
   const input = parse(deleteAccountSchema, req.body);
   const [row] = await db().select().from(users).where(eq(users.id, user.id));

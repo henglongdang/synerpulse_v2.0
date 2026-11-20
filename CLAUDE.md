@@ -17,6 +17,7 @@ Full-stack implementation of the HCII 2025 paper *Revolutionizing Household Fina
 - `npm run dev`: blank install (DB `apps/api/data/pglite`). `npm run demo`: separate DB `apps/api/data/demo` with the fictional sample household (`mary@sample.familypulse.test` / `familypulse-demo`); `demo:reset` re-seeds it. Both serve API :4000 and web :5173 (`scripts/dev.mjs`).
 - Tests: `npm test` (shared + api + web unit), `npm run test:pg` (API suite through the production node-postgres driver), `npm run test:e2e` (Playwright starts its own isolated API :4100 and web :5174)
 - `npm run lint`, `npm run typecheck`, `npm run db:reset` (dev only)
+- Public demo (`DEMO_MODE=true`, set in `render.yaml`): `modules/demo/service.ts` seeds and resets the sample household by age; `forbidDemo` locks demo accounts. Hosting: Render blueprint (`render.yaml`) via the README button.
 - Production: `npm run build`, then from `apps/api` run `npm start` (migrates, then serves the API + `WEB_DIST_DIR`). Docker: `docker compose up --build` (verified only by CI; see `docs/DEPLOYMENT.md`)
 
 ## Conventions and gotchas (learned the hard way)

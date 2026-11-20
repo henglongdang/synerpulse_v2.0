@@ -11,7 +11,7 @@
 
 What remains, in priority order:
 
-1. **Push to GitHub so CI runs.** `.github/workflows/ci.yml` runs lint, types, tests (both DB drivers), E2E on four device profiles, and a Docker build with a smoke test. Treat the first green `docker` job as the verification of the Dockerfile. If it fails, fix it and record the fix here.
+1. **Go live (needs the owner's Render account).** Click the README's *Deploy to Render* button, sign in with GitHub, and apply the blueprint. Afterwards: check the public URL (sign-in page shows the demo card), add SMTP for real emails, and upgrade the free database before its time limit. Pushed: https://github.com/henglongdang/familypulse_v2.0 (public). CI passed its first run, including the Docker build.
 2. **Product decision: future-dated entries.** Current balances and net worth include entries dated after "today", while the net-worth history up to today does not. Decide whether "current" should exclude them (show them as *scheduled*), then change the balance queries (`accounts/service.ts`, `finance/service.ts`) and the dashboard together.
 3. **Hardening, from SECURITY_AND_PRIVACY.md:** Postgres row-level security as defence in depth, email verification, optional 2FA, and a shared rate-limit store before running several instances.
 4. **Features recorded as future work** (FEATURE_IMPLEMENTATION.md ⏳): edit-approval workflow, email and push delivery, receipt OCR, PDF/Excel export, a bank aggregator behind `FinancialDataProvider`, multi-currency, dark mode.
@@ -20,6 +20,15 @@ What remains, in priority order:
 Housekeeping the user should know about:
 - During screenshotting, a stray folder was created at `C:\c\Users\dangh\AppData\Local\Temp\claude\…\scratchpad\shots` (2 PNGs, caused by a Git Bash path conversion). Removing it was blocked by a safety check, so the user can delete `C:\c` manually.
 - `npm audit` reports moderate advisories only in dev/build tooling: drizzle-kit's bundled esbuild, and glob/minimatch via workbox-build. These are not shipped to the runtime.
+
+---
+
+## Session 3 — 2026-11-20 (publishing)
+- **GitHub:** public repo `henglongdang/familypulse_v2.0`. Before the first push, history was rewritten to drop the paper PDFs (publisher copyright); the slides and wireframes are kept. **Mistake and fix:** `git filter-branch` also deleted the two PDFs from the working folder. They were restored immediately from the pre-rewrite objects, with identical content hashes, and a full backup bundle was kept. Doc references to old commit hashes were updated; commit `4edd973`'s message still cites the pre-rewrite `17615ac` (now `cdc05d0`).
+- **First CI run: all green**: checks, E2E on 4 devices, and the **Docker image build + smoke test** (the first real verification of the Dockerfile).
+- **Run modes:** `npm run dev` (blank DB) vs `npm run demo` / `demo:reset` (separate DB with the sample household), via `scripts/dev.mjs`.
+- **Public website support:** a `render.yaml` blueprint (web service from the Dockerfile + PostgreSQL) and a README "Deploy to Render" button. `APP_ORIGIN` falls back to `RENDER_EXTERNAL_URL`. `DEMO_MODE` seeds the demo at startup and resets it **by age** (hosts sleep idle services, so a timer alone would not fire). `forbidDemo` locks shared demo accounts against account- and household-level changes. The sign-in page has an "Explore the demo household" button, and the demo banner offers "Create your own account".
+- Verified on a local production build in demo mode: the demo card, one-click demo sign-in, the locked-settings notice, and a fresh visitor registration, with no console errors. New `demo.test.ts` (14 tests).
 
 ---
 

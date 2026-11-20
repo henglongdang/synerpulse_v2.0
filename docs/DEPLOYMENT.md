@@ -1,6 +1,6 @@
 # Deployment
 
-**FamilyPulse is not deployed anywhere yet.** This page describes the supported production shape and what has been verified.
+This page describes the supported production shape, what has been verified, and how to put the site online. **Deploying needs your own hosting account**; nothing is deployed automatically.
 
 ## Recommended architecture
 - **One Node.js service** (Node 20+) runs the API and serves the built web app from the same origin (`WEB_DIST_DIR`).
@@ -11,6 +11,25 @@
 - Suitable hosts: any container platform (Fly.io, Render, Railway, Cloud Run with a volume or S3 adapter, ECS) or a single VM with Docker Compose.
 
 Start with **one instance**. Sessions live in the database, so more instances work behind any load balancer, with two caveats. Rate limits are kept in memory per instance, so move them to a shared store such as Redis. The hourly alert sweep runs in-process, so enable it on one instance only (`ALERT_SWEEP_MINUTES=0` on the rest).
+
+## Render (one-click, recommended)
+1. Open the **Deploy to Render** button in the README, or go to Render dashboard → **New → Blueprint** and pick this repository.
+2. Render reads `render.yaml` and creates:
+   - **`familypulse`**, a web service built from the `Dockerfile`, with health check `/api/health` and auto-deploy on every push to `main`;
+   - **`familypulse-db`**, a PostgreSQL database wired in through `DATABASE_URL`.
+3. When the deploy finishes, the site is at `https://familypulse-XXXX.onrender.com` (shown in the dashboard). `APP_ORIGIN` comes from Render's `RENDER_EXTERNAL_URL` automatically.
+
+Preconfigured settings:
+- `DEMO_MODE=true`: on first start the API loads the fictional sample household and offers "Explore the demo household" on the sign-in page. Demo accounts (`*@sample.familypulse.test`) are locked against password, profile, session, account, household, membership and invitation changes. The demo is reset whenever it is older than `DEMO_RESET_HOURS` (24), checked at startup and hourly, so it stays correct even when the service sleeps.
+- `TRUST_PROXY=true`, so client IPs are correct for rate limiting behind Render's proxy.
+- `EMAIL_TRANSPORT=console`: until you add SMTP (`EMAIL_TRANSPORT=smtp`, `SMTP_URL`), password-reset and invitation emails appear in the service log, not in inboxes. Invitations still work, because the inviter copies the link from the app.
+
+**Free-tier caveats** (check Render's current terms):
+- Free web services **sleep when idle**; the first visit afterwards takes a little while.
+- Free PostgreSQL databases are **time-limited**; upgrade the database plan to keep data.
+- The free plan has **no persistent disk**, so uploaded receipts are lost on redeploy or restart. Use a paid plan with a disk (`UPLOAD_DIR`) or add S3 storage before relying on receipts.
+
+To turn the demo off, set `DEMO_MODE=false` (the sample household stays until deleted).
 
 ## Build & run without Docker
 
@@ -38,7 +57,7 @@ docker compose run --rm app node dist/seed.js --allow-production   # optional fi
 
 `Dockerfile` is multi-stage: it builds everything, then a slim runtime with production dependencies only. It runs as the non-root `node` user, has a health check on `/api/health`, and applies migrations before starting.
 
-> ⚠️ **Not built or run here**, because Docker was not available on the development machine. The image reproduces the runtime layout that *was* verified above. Build it once in CI before relying on it.
+> ✅ **Verified in CI.** The GitHub Actions `docker` job builds this image and smoke-tests `/api/health` and the web app on every push. The first run passed. (Docker isn't installed on the development machine.)
 
 ## Database
 - Migrations are applied automatically at start (`dist/migrate.js`) and are safe to re-run.

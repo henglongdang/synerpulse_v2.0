@@ -1,3 +1,10 @@
+/** Accounts in this (reserved, non-routable `.test`) domain belong to the shared, fictional demo household. */
+export const DEMO_EMAIL_DOMAIN = 'sample.familypulse.test';
+export const DEMO_PASSWORD = 'familypulse-demo';
+export function isDemoEmail(email: string | null | undefined): boolean {
+  return typeof email === 'string' && email.toLowerCase().endsWith(`@${DEMO_EMAIL_DOMAIN}`);
+}
+
 export const ROLES = ['owner', 'admin', 'contributor', 'viewer'] as const;
 export type Role = (typeof ROLES)[number];
 
