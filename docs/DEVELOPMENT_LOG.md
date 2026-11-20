@@ -46,7 +46,7 @@ Housekeeping the user should know about:
 
   All update schemas are now written out explicitly, with regression tests in the shared and API suites.
 - **Orphaned dev servers on Windows.** Stopping a background shell left the child `node` processes running. They held the Argon2 `.node` file (blocking `npm ci`) and stale ports (one E2E failure). They are now cleaned up by command line (see CLAUDE.md).
-- **jest-dom matchers missing when tests run via `npm run -w`.** On Windows, a drive-letter casing difference loaded a second Vitest copy. The setup file now calls `expect.extend(matchers)` itself. *Correction:* commit `17615ac` blamed `sideEffects:false`; that was wrong, and `1bf2a92` records the real cause.
+- **jest-dom matchers missing when tests run via `npm run -w`.** On Windows, a drive-letter casing difference loaded a second Vitest copy. The setup file now calls `expect.extend(matchers)` itself. *Correction:* commit `cdc05d0` blamed `sideEffects:false`; that was wrong, and `4edd973` records the real cause.
 - An aborted `npm install` left `node_modules` inconsistent (`npm ls` crashed). Recovered with `npm ci`.
 
 ### Verification (end of session 2)
@@ -97,9 +97,9 @@ Housekeeping the user should know about:
 - Smaller fixes: a true minus sign on percentage sliders; consistent axis tick style; x-label collisions; a `/auth/session` probe so a fresh visit logs no console 401.
 
 ### Commits
-1. `ef92a6c` Baseline: research materials preserved
-2. `cdbe288` Backend API, schema, tests
-3. `ad2e73a` Web app, design system, all pages
+1. `5a0101c` Baseline: research materials preserved
+2. `4674c39` Backend API, schema, tests
+3. `b57d88c` Web app, design system, all pages
 4. (this commit) QA: Playwright E2E, component tests, rate-limit test, fixes, handoff docs
 
 ### Verification (end of session 1)
