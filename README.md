@@ -1,5 +1,6 @@
 # SynerPulse
-# https://synerpulse.onrender.com
+## https://synerpulse.onrender.com
+
 
 A collaborative, forward-looking household finance app: one shared place for accounts, budgets, bills, goals and the conversation around every entry, plus a cash-flow planner for testing a decision before you make it.
 
@@ -12,22 +13,6 @@ The conference slides and the original Figma wireframes are in `HCII 2025 Intern
 > **Status:** feature-complete v2.0. CI builds and tests everything, including the Docker image, on every push.
 
 
-
-## Put it online (public website)
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/henglongdang/synerpulse_v2.0)
-
-The button creates the web app and a PostgreSQL database on [Render](https://render.com) from `render.yaml`. You sign in with GitHub and confirm. The site then offers both:
-- **Create your own account**: a fresh, blank household for real use.
-- **Explore the demo household**: one click into a fictional family's finances. Demo accounts can't change passwords, delete things or invite people, and the demo resets daily, so visitors can't spoil it for each other.
-
-See `docs/DEPLOYMENT.md` for free-tier limits, email setup and a custom domain.
-
-## Tech stack
-- **Web:** React 19, Vite 7, React Router 7, TanStack Query, D3 (scales and shapes), hand-built CSS design system, PWA (Workbox)
-- **API:** Node.js 20+, Express 5, Zod, Drizzle ORM, Argon2id, Pino
-- **Database:** PostgreSQL. Development and tests use **PGlite**, an embedded Postgres, so nothing needs installing.
-- **Tests:** Vitest (unit and integration), Testing Library, Playwright (E2E on desktop, iPhone, Android and iPad profiles)
 
 ## Quick start
 Prerequisite: Node.js 20.19 or newer (developed on Node 26).
@@ -58,6 +43,23 @@ Demo sign-ins (fictional names and figures):
 
 In development, password-reset and invitation emails are printed to the API console instead of being sent.
 
+
+## Deployment - Render
+
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/henglongdang/synerpulse_v2.0)
+
+The button creates the web app and a PostgreSQL database on [Render](https://render.com) from `render.yaml`. You sign in with GitHub and confirm. The site then offers both:
+- **Create your own account**: a fresh, blank household for real use.
+- **Explore the demo household**: one click into a fictional family's finances. Demo accounts can't change passwords, delete things or invite people, and the demo resets daily, so visitors can't spoil it for each other.
+
+See `docs/DEPLOYMENT.md` for free-tier limits, email setup and a custom domain.
+
+## Tech stack
+- **Web:** React 19, Vite 7, React Router 7, TanStack Query, D3 (scales and shapes), hand-built CSS design system, PWA (Workbox)
+- **API:** Node.js 20+, Express 5, Zod, Drizzle ORM, Argon2id, Pino
+- **Database:** PostgreSQL. Development and tests use **PGlite**, an embedded Postgres, so nothing needs installing.
+- **Tests:** Vitest (unit and integration), Testing Library, Playwright (E2E on desktop, iPhone, Android and iPad profiles)
 ## Scripts (from the repo root)
 | Command | What it does |
 |---|---|
@@ -92,3 +94,5 @@ A single Node service serves the API and the built web app (`WEB_DIST_DIR`) from
 - `docs/SECURITY_AND_PRIVACY.md`, `docs/DEPLOYMENT.md`: operations
 - `docs/DESIGN_SYSTEM.md`: tokens, components, chart rules
 - `docs/USER_GUIDE.md`: for end users
+
+  Rev 11.2026
