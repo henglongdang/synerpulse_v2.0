@@ -1,4 +1,5 @@
 # SynerPulse
+# https://synerpulse.onrender.com
 
 A collaborative, forward-looking household finance app: one shared place for accounts, budgets, bills, goals and the conversation around every entry, plus a cash-flow planner for testing a decision before you make it.
 
@@ -9,6 +10,8 @@ SynerPulse is the software implementation of the paper:
 The conference slides and the original Figma wireframes are in `HCII 2025 International Paper/`. The paper itself is not redistributed here; please use the DOI. The mapping from paper to software is in `docs/PROJECT_UNDERSTANDING.md`.
 
 > **Status:** feature-complete v2.0. CI builds and tests everything, including the Docker image, on every push.
+
+
 
 ## Put it online (public website)
 
